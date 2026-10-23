@@ -1,0 +1,335 @@
+@import './colorRoot.postcss';
+/**
+ * 自定义UI样式
+ */
+body,
+html {
+    /* 输入框 */
+    .n-input .n-input__input-el,
+    .n-input .n-input__textarea-el {
+        caret-color: var(--base-color);
+    }
+    .n-input:not(.n-input--disabled):hover .n-input__state-border {
+        border-color: var(--base-color);
+    }
+    .n-input:not(.n-input--disabled):focus .n-input__state-border {
+        border-color: var(--base-color);
+    }
+    .n-input.n-input--disabled .n-input__state-border {
+        border-color: var(--base-grey5);
+    }
+    .n-input.n-input--disabled .n-input__input-el,
+    .n-input.n-input--disabled .n-input__textarea-el {
+        /* color: var(--base-grey6); */
+        cursor: not-allowed;
+    }
+    .n-input.n-input--disabled .n-input__input-el::placeholder,
+    .n-input.n-input--disabled .n-input__textarea-el::placeholder {
+        color: var(--base-grey5);
+    }
+
+    /* 下拉框 */
+    .n-select .n-base-selection .n-base-selection-label {
+        color: var(--base-black);
+    }
+    .n-select .n-base-selection .n-base-selection-input {
+        color: var(--base-black);
+    }
+    .n-select .n-base-selection .n-base-selection-input::placeholder {
+        color: var(--base-grey5);
+    }
+    .n-select .n-base-selection .n-base-selection-input:hover {
+        border-color: var(--base-color);
+    }
+    .n-select .n-base-selection .n-base-selection-input:focus {
+        border-color: var(--base-color);
+    }
+    .n-base-selection:not(.n-base-selection--disabled):hover .n-base-selection__state-border {
+        border-color: var(--base-color);
+    }
+    .n-base-select-menu .n-base-select-option.n-base-select-option--selected {
+        color: var(--base-color);
+    }
+    /* 菜单样式 */
+    .n-menu .n-menu-item-content .n-menu-item-content-header {
+        color: var(--base-white);
+        font-size: 14px;
+    }
+    .n-menu .n-menu-item-content .n-menu-item-content__icon {
+        color: var(--base-white);
+        font-size: 14px;
+    }
+    /* 菜单项选中样式 */
+    .n-menu .n-menu-item-content.n-menu-item-content--selected::before {
+        background-color: var(--base-white);
+    }
+    /* 菜单项选中样式文字和图标颜色 */
+    .n-menu .n-menu-item-content.n-menu-item-content--selected .n-menu-item-content-header {
+        color: var(--base-color);
+    }
+    /* 菜单项选中样式图标颜色 */
+    .n-menu .n-menu-item-content.n-menu-item-content--selected .n-menu-item-content__icon {
+        color: var(--base-color);
+    }
+    /* 菜单选中项父级样式 */
+    .n-menu .n-menu-item-content.n-menu-item-content--child-active .n-menu-item-content-header {
+        color: var(--base-white);
+    }
+    .n-menu .n-menu-item-content.n-menu-item-content--child-active .n-menu-item-content__arrow {
+        color: var(--base-white);
+    }
+    .n-menu .n-menu-item-content.n-menu-item-content--child-active .n-menu-item-content__icon {
+        color: var(--base-white);
+    }
+    /* 菜单选中项hover样式 */
+    .n-menu .n-menu-item-content:not(.n-menu-item-content--disabled).n-menu-item-content--selected:hover::before {
+        background-color: var(--base-white);
+    }
+    .n-menu
+        .n-menu-item-content:not(.n-menu-item-content--disabled).n-menu-item-content--selected:hover
+        .n-menu-item-content-header {
+        color: var(--base-color);
+    }
+    .n-menu
+        .n-menu-item-content:not(.n-menu-item-content--disabled).n-menu-item-content--selected:hover
+        .n-menu-item-content__icon {
+        color: var(--base-color);
+    }
+    /* 菜单非选中项hover样式 */
+    .n-menu .n-menu-item-content:not(.n-menu-item-content--disabled):hover::before {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+    .n-menu .n-menu-item-content:not(.n-menu-item-content--disabled):hover .n-menu-item-content__icon {
+        color: var(--base-white);
+    }
+    .n-menu .n-menu-item-content:not(.n-menu-item-content--disabled):hover .n-menu-item-content-header {
+        color: var(--base-white);
+    }
+    /* n-dropdown-option-body__prefix n-dropdown-option-body__prefix--show-icon */
+    .n-dropdown-menu
+        .n-dropdown-option
+        .n-dropdown-option-body:not(.n-dropdown-option-body--disabled).n-dropdown-option-body--active {
+        color: var(--base-color);
+        .n-dropdown-option-body__prefix {
+            color: var(--base-color);
+        }
+    }
+    .n-dropdown-menu
+        .n-dropdown-option
+        .n-dropdown-option-body:not(.n-dropdown-option-body--disabled).n-dropdown-option-body--active::before {
+        background-color: var(--base-border-grey);
+    }
+    .n-menu .n-menu-item,
+    .n-menu .n-submenu .n-menu-item-content {
+        height: 48px;
+    }
+    .n-menu .n-menu-item-content:not(.n-menu-item-content--disabled).n-menu-item-content--child-active:hover {
+        .n-menu-item-content-header,
+        .n-menu-item-content__icon {
+            color: var(--base-white);
+        }
+    }
+    .n-drawer .n-drawer-content .n-drawer-body-content-wrapper {
+        padding: 0px;
+    }
+    .n-drawer .n-drawer-content .n-drawer-footer {
+    padding: 20px 0 !important;
+}
+    .n-base-select-menu .n-base-select-option .n-base-select-option__check {
+        color: var(--base-color);
+    }
+    .n-date-picker {
+        width: 100%;
+    }
+    .n-date-panel
+        .n-date-panel-month-calendar
+        .n-date-panel-month-calendar__picker-col-item:not(
+            .n-date-panel-month-calendar__picker-col-item--disabled
+        ).n-date-panel-month-calendar__picker-col-item--selected {
+        color: var(--base-color);
+    }
+    .add_btn_icon_blue {
+        background: center url('@/assets/images/comm/icon⎽com⎽add_blue.png') no-repeat;
+        background-size: 100% 100%;
+    }
+
+    .menu-sider {
+        /* 深色兜底底色：背景图加载失败或未铺满时，保证白色菜单文字可读 */
+        background: #111c3f center url('@/assets/images/imgNavBg.png') no-repeat !important;
+        /* 背景图拉伸铺满整个侧边栏，避免菜单过高时下半段露出白色背景 */
+        background-size: 100% 100% !important;
+
+        .n-menu-item-content {
+            justify-items: start !important;
+        }
+
+        .menu-title {
+            height: 56px;
+            display: flex;
+            align-items: center;
+            color: var(--base-white);
+            padding-left: 34px;
+            font-family: SourceHanSans-Medium;
+            font-size: 18px;
+
+            img {
+                width: 18px;
+                height: 18px;
+                margin-right: 10px;
+            }
+        }
+        .system_logo_box {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 48px;
+            color: #fff;
+            padding-left: 32px;
+
+            .systrm_title {
+                font-weight: 600;
+                font-size: 16px;
+                color: #ffffff;
+                margin-left: 8px;
+            }
+        }
+        .n-menu-item-content__icon {
+            width: 24px !important;
+            height: 24px !important;
+        }
+        .n-menu-item-content__arrow {
+            color: #fff !important;
+        }
+    }
+
+    .n-layout-sider--collapsed {
+        .system_logo_box {
+            padding-left: 21px;
+
+            .systrm_title {
+                display: none;
+            }
+        }
+        .n-menu-item-content__icon {
+            color: #fff !important;
+        }
+    }
+
+    /**
+ * 自定义n-modal的dialog样式 --start--
+ */
+    .web-modal-container {
+        .n-dialog__title {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 28px 20px;
+            width: 100%;
+        }
+    }
+
+    .n-base-selection {
+        &:hover {
+            border-color: red !important;
+        }
+    }
+}
+
+/* 这里是应该全局设置的 ,这里设置 important是为了覆盖n-date-picker的默认样式 */
+.n-date-panel .n-date-panel-dates .n-date-panel-date.n-date-panel-date--selected::after {
+    background-color: var(--base-color) !important;
+}
+
+/* n-tab的未选中样式 */
+.n-tabs-tab {
+    color: var(--base-grey2) !important;
+}
+/* n-tab的选中样式 */
+.n-tabs-tab--active {
+    color: var(--base-black) !important;
+    font-weight: 600 !important;
+}
+/* n-tab指示条的样式 */
+.n-tabs-bar {
+    background-color: var(--base-color) !important;
+}
+/* n-tab */
+.n-tabs .n-tabs-nav.n-tabs-nav--line-type.n-tabs-nav--top .n-tabs-nav-scroll-content{
+    border: none;
+}
+.n-tabs .n-tabs-bar{
+    height: 3px;
+}
+.n-tabs .n-tabs-tab .n-tabs-tab__label{
+   font-size: 16px;
+}
+
+.n-input-number {
+    width: 100%;
+    .n-input__suffix {
+        display: none;
+    }
+}
+
+.n-popover{
+    max-width:60vw
+}
+
+
+/* n-data-table 斑马纹颜色 */
+.n-data-table .n-data-table-tr.n-data-table-tr--striped .n-data-table-td {
+    background-color: var(--base-grey9);
+}
+
+/* 表单项 */
+/* 标题 */
+.n-form-item-label__text{
+    color: #666;
+    font-weight: 'normal';
+}
+
+/* 必填提示区域高度 */
+.n-form-item .n-form-item-feedback-wrapper{
+    font-size: 12px !important;
+    min-height: 16px !important;
+}
+
+/* switch开关 */
+.n-switch{
+    width: 54px;
+}
+.n-switch .n-switch__unchecked {
+    padding-left:22px;
+}
+.n-switch .n-switch__checked {
+    padding-right:22px;
+}
+
+
+/* dialog 弹框样式 */
+.n-dialog {
+    padding: 32px !important;
+}
+.n-dialog .n-dialog__title {
+    font-size: 16px !important;
+    color: rgba(0,0,0,0.85) !important;
+    font-weight: 600 !important;
+}
+.n-dialog.n-dialog--icon-left .n-dialog__icon {
+    margin-right: 16px !important;
+}
+.n-dialog .n-dialog__content {
+    margin: 10px 0 24px 42px !important;
+    color: rgba(0,0,0,0.65) !important;
+}
+/* 禁用下的radio圆圈样式 */
+.n-radio.n-radio--disabled .n-radio__dot--checked{
+    box-shadow: inset 0 0 0 1px rgb(224,224,230) !important;
+}
+
+.n-ellipsis {
+    width: 100%;
+}
+
+.app-size-custom-file-upload .other-file .text{
+    color: #666 !important;
+    font-size: 12px;
+}

@@ -1,0 +1,10 @@
+services:
+  crm-frontend:
+    build: .
+    container_name: crm-frontend
+    network_mode: host
+    restart: always
+    environment:
+      TZ: Asia/Shanghai
+    ports:
+      - "8210:8210"

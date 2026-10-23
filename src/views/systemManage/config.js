@@ -1,0 +1,13 @@
+export const STATUS_MAP = {
+    ENABLE: { label: '启用', color: '#18D851', type: 'enable' },
+    DRAFT: { label: '草稿', color: '#FCBD12', type: 'draft' },
+    DISABLE: { label: '禁用', color: '#CBCBCB', type: 'disable' },
+}
+
+
+// 单据状态映射
+export const BILL_STATUS_MAP = {
+    ENABLE: { text: '启用', color: '#5AA771', bgColor: '#F0F9EB', bdColor: '#E2F4D8' },
+    DRAFT: { text: '草稿', color: '#E59222', bgColor: '#FFF1D9', bdColor: '#FFE49A' },
+    DISABLE: { text: '禁用', color: '#999999', bgColor: '#F0F0F0', bdColor: '#DDDFE6' },
+};

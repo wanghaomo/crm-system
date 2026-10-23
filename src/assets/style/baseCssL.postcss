@@ -1,0 +1,77 @@
+/** 页面搜索样式 -start */
+.search-mr10 {
+    margin-right: 10px;
+}
+.search-mb10 {
+    margin-bottom: 10px;
+}
+.search-item {
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+.search-btn-item {
+    font-size: 14px;
+}
+.search-title {
+    min-width: 90px;
+    padding-right: 12px;
+    display: inline-block;
+    text-align: right;
+}
+/** 页面搜索样式 -end */
+
+/* 滚动表格最后一行加上border */
+.n-data-table .n-data-table-td.n-data-table-td--last-row {
+    border-bottom: 1px solid var(--n-merged-border-color);
+}
+
+.base-edit-page {
+    padding-bottom: 10px;
+    .page-title {
+        .title-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--base-black);
+        }
+    }
+
+    .section-container {
+        .section-body {
+            border-radius: 4px;
+
+            &.table-section {
+                padding: 0;
+                background: transparent;
+            }
+        }
+    }
+}
+
+/* n-descriptions 的样式统一 */
+.mx_crm_descriptions_style {
+    .n-descriptions-table-row {
+        display: flex;
+    }
+    .n-descriptions-table-row .n-descriptions-table-content {
+        display: flex !important;
+        flex-wrap: nowrap;
+        align-items: flex-start;
+        flex: 1;
+    }
+    .n-descriptions-table-row .n-descriptions-table-content__label {
+        display: inline-block;
+        width: 100px;
+        text-align: right;
+        flex-shrink: 0;
+        color: var(--base-grey);
+        margin-right: 12px;
+    }
+    .n-descriptions-table-row .n-descriptions-table-content__content {
+        display: inline-block;
+        flex: 1;
+        min-width: 0; /* 防止内容撑开 flex 容器 */
+        word-break: break-all;
+        color: var(--base-black) !important;
+    }
+}

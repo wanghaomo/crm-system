@@ -1,0 +1,180 @@
+.mx_mes_backend {
+    /* 通用模块标题 */
+    .module-title {
+        font-size: 25px;
+        font-weight: 600;
+        margin-bottom: var(--base-width);
+        line-height: 1;
+    }
+    /* 二级模块标题 */
+    .module-title-2 {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+    .web-page-container {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        padding: var(--base-width-16);
+    }
+    .web-page-main {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        .table-list {
+            flex: 1;
+            margin-bottom: calc(var(--base-width) / 2);
+        }
+    }
+    /* 关闭padding */
+    .no-padding {
+        padding: 0;
+    }
+    .no-bg {
+        background-color: transparent;
+    }
+    /** flex 容器 -start */
+    .flex {
+        display: flex;
+    }
+    .gap-10 {
+        gap: 10px;
+    }
+    .gap-20 {
+        gap: 20px;
+    }
+    .flex-1 {
+        flex: 1;
+    }
+    .justify-between {
+        display: flex;
+        justify-content: space-between;
+    }
+    .justify-center {
+        display: flex;
+        justify-content: center;
+    }
+    .flex-center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .flex-between {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .align-center {
+        display: flex;
+        align-items: center;
+    }
+    .flex-end {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
+    .flex-start {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    .flex-column {
+        display: flex;
+        flex-direction: column;
+    }
+    .flex-column-between {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+    }
+    /** flex 容器 -end */
+    /** 数值动画样式 -start */
+    .animation-number {
+        font-size: 26px;
+        font-weight: 600;
+    }
+    /** 数值动画样式 -end */
+    /** 单选and多选弹窗样式 --start-- */
+    .web-modal-content {
+        padding: 0 20px;
+        height: 100%;
+        .web-modal-content-title {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 8px 0;
+            gap: 10px;
+            .n-select,
+            .n-input {
+                width: 160px;
+            }
+        }
+        .list-content {
+            height: calc(80vh - 186px);
+            margin-bottom: 10px;
+        }
+    }
+    /** 单选and多选弹窗样式 --end-- */
+    /* web头部搜索条件容器样式 */
+    .web-search-container {
+        display: flex;
+        align-items: end;
+        justify-content: flex-end;
+        margin-bottom: var(--base-width);
+        gap: var(--base-width);
+        height: 34px;
+        .search-value {
+            width: 160px;
+        }
+    }
+    .bg-color-g01 {
+        background-color: var(--base-white);
+    }
+    /* 无限旋转动画 */
+    .rotate-animation {
+        animation: rotate 1s linear infinite;
+    }
+    @keyframes rotate {
+        0% {
+            transform: rotate(360deg);
+        }
+        100% {
+            transform: rotate(0deg);
+        }
+    }
+
+    .web-detail-form-item {
+        width: 100%;
+        display: flex;
+        overflow: hidden;
+        line-height: 34px;
+        height: 58px;
+        padding-bottom: 24px;
+        .title {
+            height: 100%;
+            flex: 0 0 100px;
+            margin-right: 10px;
+            text-align: right;
+        }
+        .value {
+            height: 100%;
+            flex: 1;
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            box-sizing: border-box;
+            padding: 0 12px;
+        }
+    }
+    /* 分割线 */
+    .dividing_line{
+   
+        height: 1px;
+        background: #ECEEF4;
+        margin: 0px 16px;
+    }
+}

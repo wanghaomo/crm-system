@@ -1,0 +1,106 @@
+/* Naive UI 全局主题变量覆盖 */
+/* 这些变量会覆盖Naive UI的默认颜色 */
+
+/* 主色调 - 使用--menu绿色作为主题色 */
+:root:root{
+ --n-border-hover:1px solid red;
+ --n-caret-color:var(--base-color);
+ --n-loading-color:var(--base-color);
+}
+
+/* 可以根据需要调整这些颜色值，保持风格统一 */
+/* 如需应用此主题，请确保此文件在应用入口处被导入 */
+
+/* DatePicker 面板底部按钮（现在/清除）文字色统一为 #2C65F2 */
+.n-date-panel-actions .n-date-panel-actions__prefix .n-button,
+.n-date-panel-actions .n-date-panel-actions__suffix .n-button:not(.n-button--primary-type) {
+    color: #2C65F2 !important;
+}
+.n-date-panel-actions .n-date-panel-actions__prefix .n-button:hover,
+.n-date-panel-actions .n-date-panel-actions__suffix .n-button:not(.n-button--primary-type):hover {
+    color: #4A7BF5 !important;
+}
+
+/* DatePicker 快捷按钮（今日/昨日/近7天等）ghost/默认按钮边框与文字 */
+.n-date-panel-actions .n-button--default-type,
+.n-date-panel-actions .n-button--tertiary-type,
+.n-date-panel .n-button:not(.n-button--primary-type) {
+    color: #2C65F2 !important;
+    border-color: #2C65F2 !important;
+}
+.n-date-panel-actions .n-button--default-type:hover,
+.n-date-panel-actions .n-button--tertiary-type:hover,
+.n-date-panel .n-button:not(.n-button--primary-type):hover {
+    color: #4A7BF5 !important;
+    border-color: #4A7BF5 !important;
+}
+
+/* DatePicker 确定按钮（primary）背景与边框统一为 #2C65F2 */
+.n-date-panel .n-button.n-button--primary-type {
+    background-color: #2C65F2 !important;
+    border-color: #2C65F2 !important;
+    color: #fff !important;
+}
+.n-date-panel .n-button.n-button--primary-type:hover {
+    background-color: #4A7BF5 !important;
+    border-color: #4A7BF5 !important;
+}
+
+/* DatePicker 日期范围内的格子背景（itemColorIncluded） */
+.n-date-panel .n-date-panel-date__date--covered,
+.n-date-panel .n-date-panel-date__date--included,
+.n-date-panel .n-date-panel-date__date--selected {
+    --n-item-color-included: rgba(44, 101, 242, 0.1) !important;
+}
+.n-date-panel-date-item--covered::before,
+.n-date-panel-date-item--included::before,
+.n-date-panel-month-item--covered::before,
+.n-date-panel-year-item--covered::before {
+    background-color: rgba(44, 101, 242, 0.1) !important;
+}
+
+
+
+/* * useDialog 取消按钮（negativeText 对应 ghost 按钮） s*/ 
+.n-dialog .n-button.n-button--ghost {
+ --n-text-color: #000000A6 !important;
+ --n-text-color-hover: var(--base-color) !important;
+ --n-text-color-focus: #000000A6 !important;
+ --n-text-color-pressed: var(--base-color) !important;
+ --n-border: 1px solid var(--base-grey5) !important;
+ --n-border-hover: 1px solid var(--base-color) !important;
+ --n-border-focus: 1px solid var(--base-grey5) !important;
+ --n-border-pressed: 1px solid var(--base-color) !important;
+}
+/* useDialog 普通确认按钮 */
+.n-dialog .n-button.n-button--warning-type,
+.n-dialog .n-button.n-button--primary-type {
+ --n-text-color: var(--base-white) !important;
+ --n-text-color-hover: var(--base-white) !important;
+ --n-text-color-focus: var(--base-white) !important;
+ --n-text-color-pressed: var(--base-white) !important;
+ --n-color: var(--base-color) !important;
+ --n-color-hover: var(--base-color) !important;
+ --n-color-focus: var(--base-color) !important;
+ --n-color-pressed: var(--base-color) !important;
+ --n-border: 1px solid var(--base-color) !important;
+ --n-border-hover: 1px solid var(--base-color) !important;
+ --n-border-focus: 1px solid var(--base-color) !important;
+ --n-border-pressed: 1px solid var(--base-color) !important;
+}
+
+/* useDialog 删除/关闭弹窗的确认按钮 */
+.n-dialog .n-button.n-button--warning-type.dialog_btn_warning {
+ --n-text-color: var(--base-white) !important;
+ --n-text-color-hover: var(--base-white) !important;
+ --n-text-color-focus: var(--base-white) !important;
+ --n-text-color-pressed: var(--base-white) !important;
+ --n-color: #DB5831 !important;
+ --n-color-hover: #DB5831 !important;
+ --n-color-focus: #DB5831 !important;
+ --n-color-pressed: #DB5831 !important;
+ --n-border: 1px solid #DB5831 !important;
+ --n-border-hover: 1px solid #DB5831 !important;
+ --n-border-focus: 1px solid #DB5831 !important;
+ --n-border-pressed: 1px solid #DB5831 !important;
+}

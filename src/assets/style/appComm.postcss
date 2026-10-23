@@ -1,0 +1,145 @@
+@import './colorRoot.postcss';
+/* 返回按钮 */
+.back-icon {
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    font-size: 20px;
+    color: var(--base-white);
+}
+/* 通用图标样式 */
+.comm-icon {
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    font-size: 20px;
+    color: var(--base-white);
+}
+.app-page-container {
+    ::-webkit-scrollbar {
+        /*滚动条整体样式*/
+        width: 2px;
+        /*高宽分别对应横竖滚动条的尺寸*/
+        height: 2px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        /*滚动条里面小方块*/
+        border-radius: 5px;
+        -webkit-box-shadow: inset 0 0 5px var(--base-color);
+
+        background-color: #b6f4f4;
+    }
+
+    ::-webkit-scrollbar-track {
+        /*滚动条里面轨道*/
+        -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
+        border-radius: 5px;
+        background-color: rgba(21, 78, 183, 0.3);
+    }
+}
+
+/* app人员选择弹窗样式 */
+.app-popup-content {
+    .app-popup-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--width-10);
+        border-bottom: 1px solid var(--border);
+        height: 32px;
+        .icon {
+            color: var(--base-grey5);
+        }
+    }
+    .search-box {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        .van-popover__wrapper {
+            display: block;
+            width: 100%;
+        }
+        .van-cell {
+            height: 34px;
+            padding: 0 10px;
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border);
+            border-radius: 3px;
+        }
+    }
+    .app-popup-body {
+        height: calc(100vh - 32px);
+        background-color: var(--base-grey3);
+
+        .list-item {
+            background-color: var(--base-white);
+            margin-bottom: var(--width-10);
+            padding: var(--width-10);
+            border-radius: 6px;
+            font-size: 12px;
+            .item-row {
+                display: flex;
+                margin-bottom: 10px;
+                line-height: 1.2;
+                .row-label {
+                    margin-right: 5px;
+                    flex-shrink: 0;
+                    width: 80px;
+                    text-align: right;
+                }
+            }
+            &:last-of-type {
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+
+.app-page-container {
+    .list-item {
+        background-color: var(--base-white);
+        margin-bottom: var(--width-10);
+        padding: var(--width-10);
+        border-radius: 6px;
+        .item-row {
+            display: flex;
+            line-height: 24px;
+            margin-bottom: 10px;
+            .row-label {
+                margin-right: 5px;
+                flex-shrink: 0;
+                width: 80px;
+                text-align: right;
+            }
+        }
+    }
+    .search-box {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        gap: var(--width-10);
+
+        .select-item {
+            flex: 1;
+            width: 0;
+        }
+    }
+}
+
+.bg-color-g03 {
+    background-color: var(--base-grey3);
+}
+
+/* vant 按钮样式 */
+.van-button--plain.van-button--danger{
+    color: var(--base-color-red);
+    border-color: var(--base-border-color-red);
+}
+.van-button--plain.van-button--primary {
+    color: var(--blue-color);
+    border-color: var(--base-border-color-blue);
+}
