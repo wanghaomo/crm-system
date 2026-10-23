@@ -1,4 +1,39 @@
 export const menuData = [
+    // ==================== 供需数据地图（顶级单页） ====================
+    {
+        path: '',
+        filePath: '',
+        name: '供需数据地图',
+        icon: '',
+        visible: true,
+        code: 'crm:supply_demand_map',
+        parentCode: '',
+        meta: {
+            title: '供需数据地图',
+            nologin: false,
+            layout: 'main-layout',
+            code: 'crm:supply_demand_map',
+            parentCode: '',
+        },
+        children: [
+            {
+                path: '/supplyDemandMap/index',
+                filePath: '/supplyDemandMap/index',
+                name: '供需数据地图',
+                icon: '',
+                visible: true,
+                code: 'crm:supply_demand_map:view',
+                parentCode: 'crm:supply_demand_map',
+                meta: {
+                    title: '供需数据地图',
+                    nologin: false,
+                    layout: 'main-layout',
+                    code: 'crm:supply_demand_map:view',
+                    parentCode: 'crm:supply_demand_map',
+                },
+            },
+        ],
+    },
     // ==================== 客户管理 ====================
     {
         path: '',
@@ -29,6 +64,22 @@ export const menuData = [
                     nologin: false,
                     layout: 'main-layout',
                     code: 'crm:customer_archive',
+                    parentCode: 'crm:customer_manage',
+                },
+            },
+            {
+                path: '/customerManage/competitor/index',
+                filePath: '/customerManage/competitor/index',
+                name: '竞争对手',
+                icon: '',
+                visible: true,
+                code: 'crm:competitor_manage',
+                parentCode: 'crm:customer_manage',
+                meta: {
+                    title: '竞争对手',
+                    nologin: false,
+                    layout: 'main-layout',
+                    code: 'crm:competitor_manage',
                     parentCode: 'crm:customer_manage',
                 },
             },
@@ -421,17 +472,17 @@ export const menuData = [
             },
         ],
     },
-    // ==================== 发运管理 ====================
+    // ==================== 订单管理 ====================
     {
         path: '',
         filePath: '',
-        name: '发运管理',
+        name: '订单管理',
         icon: 'icon⎽func⎽fygl',
         visible: true,
         code: 'crm:shipping_manage',
         parentCode: '',
         meta: {
-            title: '发运管理',
+            title: '订单管理',
             nologin: false,
             layout: 'main-layout',
             code: 'crm:shipping_manage',
@@ -441,13 +492,13 @@ export const menuData = [
             {
                 path: '/shippingManage/dailyShippingPlan/index',
                 filePath: '/shippingManage/dailyShippingPlan/index',
-                name: '发运计划',
+                name: '发货订单',
                 icon: '',
                 visible: true,
                 code: 'crm:daily_shipping_plan',
                 parentCode: 'crm:shipping_manage',
                 meta: {
-                    title: '发运计划',
+                    title: '发货订单',
                     nologin: false,
                     layout: 'main-layout',
                     code: 'crm:daily_shipping_plan',

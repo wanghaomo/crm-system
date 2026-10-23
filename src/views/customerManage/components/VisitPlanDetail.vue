@@ -53,9 +53,8 @@
                         </div>
                         <div class="info-row">
                             <div class="info-cell">
-                                <span class="cell-label">客户对接人</span>
-                                <span class="cell-value" v-if="detailData.contactPersonList">{{ detailData.contactPersonList.map((i: any) => i.label).join('、') || '--' }}</span>
-                                <span class="cell-value" v-else>--</span>
+                                <span class="cell-label">拜访方式</span>
+                                <span class="cell-value">{{ detailData.visitMode || '--' }}</span>
                             </div>
                             <div class="info-cell">
                                 <span class="cell-label">实际拜访时间</span>
@@ -73,12 +72,37 @@
                             </div>
                         </div>
                     </div>
+                    <!-- 拜访地点 -->
+                    <div class="info-block">
+                        <div class="block-label">拜访地点</div>
+                        <pre class="block-value pre-wrap">{{ detailData.visitPlace || '--' }}</pre>
+                    </div>
+                    <!-- 关键决策人 -->
+                    <div class="info-block">
+                        <div class="block-label">关键决策人</div>
+                        <pre class="block-value pre-wrap">{{ detailData.keyDecisionMakers || '--' }}</pre>
+                    </div>
+                    <!-- 对方参会人 -->
+                    <div class="info-block">
+                        <div class="block-label">对方参会人</div>
+                        <pre class="block-value pre-wrap">{{ detailData.otherParticipants || '--' }}</pre>
+                    </div>
                     <!-- 拜访目的 -->
                     <div class="info-block">
                         <div class="block-label">拜访目的</div>
                         <div class="block-value">
                             <MxDict :model-value="detailData.visitPurpose" dict-type="拜访目的" :text="true" />
                         </div>
+                    </div>
+                    <!-- 最低可接受成果 -->
+                    <div class="info-block">
+                        <div class="block-label">最低可接受成果</div>
+                        <pre class="block-value pre-wrap">{{ detailData.minAcceptableResult || '--' }}</pre>
+                    </div>
+                    <!-- 挑战性结果 -->
+                    <div class="info-block">
+                        <div class="block-label">挑战性结果</div>
+                        <pre class="block-value pre-wrap">{{ detailData.challengeResult || '--' }}</pre>
                     </div>
                     <!-- 客户工作规律 -->
                     <div class="info-block">
@@ -101,6 +125,14 @@
                     <div class="info-block">
                         <div class="block-label">客户库存/开工率记录</div>
                         <pre class="block-value pre-wrap">{{ detailData.customerInventoryRate || '--' }}</pre>
+                    </div>
+                    <!-- 检查准备表（系统自动生成，支持下载；未生成时不展示） -->
+                    <div class="info-block" v-if="Array.isArray(detailData.checkPrepFileList) && detailData.checkPrepFileList.length">
+                        <div class="block-label">检查准备表</div>
+                        <div class="block-value">
+                            <MxWebFileUpload v-if="Array.isArray(detailData.checkPrepFileList) && detailData.checkPrepFileList.length" :only-show="true" :model-value="detailData.checkPrepFileList" />
+                            <span v-else>--</span>
+                        </div>
                     </div>
                     <!-- 拜访附件 -->
                     <div class="info-block">

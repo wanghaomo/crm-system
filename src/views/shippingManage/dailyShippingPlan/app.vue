@@ -176,7 +176,7 @@ const statusConfig = computed(() => [
 
 // 明细状态操作配置，沿用详情页的状态值和确认文案。
 const detailStatusActionMap = {
-    suspend: { status: 1, title: '确认挂起订单', message: '确定要挂起该订单吗？', successMessage: '挂起成功' },
+    suspend: { status: 1, title: '确认暂缓发货', message: '确定要暂缓该订单发货吗？', successMessage: '暂缓发货成功' },
     close: { status: 2, title: '确认关闭订单', message: '确定要关闭该订单吗？', successMessage: '关闭成功' },
     recover: { status: 3, title: '确认恢复订单', message: '确定要恢复该订单吗？', successMessage: '恢复成功' },
 };
@@ -189,7 +189,7 @@ const detailStatusActionMap = {
 const getDetailActions = (item: any) =>
     [
         {
-            text: '挂起订单',
+            text: '暂缓发货',
             action: 'suspend',
             type: 'primary',
             show: item.status === PLAN_STATUS_CONSTANT.EXECUTING && checkPermission(['crm:daily_shipping_plan:hang']),

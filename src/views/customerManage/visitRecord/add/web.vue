@@ -58,6 +58,7 @@
                                 </n-form-item>
                             </n-grid-item>
                         </n-grid>
+
                         <!-- 沟通内容 -->
                         <n-form-item label="沟通内容" path="content">
                             <MxEditor
@@ -101,6 +102,157 @@
                             <n-input v-model:value="formData.plusServicesExecution" type="textarea" placeholder="请输入" :maxlength="255" show-count :rows="4" />
                         </n-form-item>
 
+                        <!-- 是否需要协助会议 -->
+                        <n-form-item label="是否需要协助会议" path="needMeetingAssist">
+                            <n-radio-group v-model:value="formData.needMeetingAssist">
+                                <n-space>
+                                    <n-radio value="YES">是</n-radio>
+                                    <n-radio value="NO">否</n-radio>
+                                </n-space>
+                            </n-radio-group>
+                        </n-form-item>
+
+                        <!-- 会议需求问卷：仅「是否需要协助会议」选择「是」时展示 -->
+                        <div v-if="formData.needMeetingAssist === 'YES'" class="meeting-section">
+                            <div class="meeting-title">会议需求问卷</div>
+                            <n-grid :cols="2" :x-gap="24">
+                                <n-grid-item>
+                                    <n-form-item label="会议/接待名称" required>
+                                        <n-input v-model:value="formData.meetingRequirement.meetingName" placeholder="请输入" :maxlength="100" />
+                                    </n-form-item>
+                                </n-grid-item>
+                                <n-grid-item>
+                                    <n-form-item label="会议/接待时间" required>
+                                        <n-date-picker v-model:formatted-value="formData.meetingRequirement.meetingTime" type="datetime" value-format="yyyy-MM-dd HH:mm" placeholder="请选择" style="width: 100%" clearable />
+                                    </n-form-item>
+                                </n-grid-item>
+                                <n-grid-item>
+                                    <n-form-item label="会议/接待级别" required>
+                                        <n-select v-model:value="formData.meetingRequirement.meetingLevel" :options="meetingLevelOptions" placeholder="请选择" />
+                                    </n-form-item>
+                                </n-grid-item>
+                                <n-grid-item>
+                                    <n-form-item label="会议/接待地区" required>
+                                        <n-select v-model:value="formData.meetingRequirement.meetingArea" :options="meetingAreaOptions" placeholder="请选择" />
+                                    </n-form-item>
+                                </n-grid-item>
+                                <n-grid-item>
+                                    <n-form-item label="会议室/接待室地点" required>
+                                        <n-select v-model:value="formData.meetingRequirement.meetingRoom1" :options="meetingRoom1Options" placeholder="请选择" />
+                                    </n-form-item>
+                                </n-grid-item>
+                                <n-grid-item>
+                                    <n-form-item label="会议室/接待室地点 2">
+                                        <n-select v-model:value="formData.meetingRequirement.meetingRoom2" :options="meetingRoom2Options" placeholder="请选择" clearable />
+                                    </n-form-item>
+                                </n-grid-item>
+                                <n-grid-item>
+                                    <n-form-item label="会议室/接待室地点 3">
+                                        <n-select v-model:value="formData.meetingRequirement.meetingRoom3" :options="meetingRoom3Options" placeholder="请选择" clearable />
+                                    </n-form-item>
+                                </n-grid-item>
+                                <n-grid-item>
+                                    <n-form-item label="参会人桌牌" required>
+                                        <n-select v-model:value="formData.meetingRequirement.nameplates" :options="nameplateOptions" multiple placeholder="请选择" />
+                                    </n-form-item>
+                                </n-grid-item>
+                                <n-grid-item>
+                                    <n-form-item label="电脑/会议屏" required>
+                                        <n-select v-model:value="formData.meetingRequirement.screen" :options="screenOptions" placeholder="请选择" />
+                                    </n-form-item>
+                                </n-grid-item>
+                                <n-grid-item>
+                                    <n-form-item label="投影仪" required>
+                                        <n-select v-model:value="formData.meetingRequirement.projector" :options="needOrNoneOptions" placeholder="请选择" />
+                                    </n-form-item>
+                                </n-grid-item>
+                                <n-grid-item>
+                                    <n-form-item label="翻页笔" required>
+                                        <n-select v-model:value="formData.meetingRequirement.clicker" :options="needOrNoneOptions" placeholder="请选择" />
+                                    </n-form-item>
+                                </n-grid-item>
+                                <n-grid-item>
+                                    <n-form-item label="麦克风" required>
+                                        <n-select v-model:value="formData.meetingRequirement.microphone" :options="needOrNoneOptions" placeholder="请选择" />
+                                    </n-form-item>
+                                </n-grid-item>
+                                <n-grid-item>
+                                    <n-form-item label="会议茶水" required>
+                                        <n-select v-model:value="formData.meetingRequirement.tea" :options="teaOptions" placeholder="请选择" />
+                                    </n-form-item>
+                                </n-grid-item>
+                                <n-grid-item>
+                                    <n-form-item label="茶歇" required>
+                                        <n-select v-model:value="formData.meetingRequirement.teaBreak" :options="teaBreakOptions" placeholder="请选择" />
+                                    </n-form-item>
+                                </n-grid-item>
+                                <n-grid-item>
+                                    <n-form-item label="接待午餐">
+                                        <n-select v-model:value="formData.meetingRequirement.lunch" :options="receptionMealOptions" placeholder="请选择" clearable />
+                                    </n-form-item>
+                                </n-grid-item>
+                                <n-grid-item>
+                                    <n-form-item label="接待晚餐">
+                                        <n-select v-model:value="formData.meetingRequirement.dinner" :options="receptionMealOptions" placeholder="请选择" clearable />
+                                    </n-form-item>
+                                </n-grid-item>
+                                <n-grid-item>
+                                    <n-form-item label="住房预定">
+                                        <n-select v-model:value="formData.meetingRequirement.hotel" :options="needOrNoneOptions" placeholder="请选择" clearable />
+                                    </n-form-item>
+                                </n-grid-item>
+                                <n-grid-item>
+                                    <n-form-item label="接机服务">
+                                        <n-select v-model:value="formData.meetingRequirement.pickUp" :options="needOrNoneOptions" placeholder="请选择" clearable />
+                                    </n-form-item>
+                                </n-grid-item>
+                                <n-grid-item>
+                                    <n-form-item label="送机服务">
+                                        <n-select v-model:value="formData.meetingRequirement.dropOff" :options="needOrNoneOptions" placeholder="请选择" clearable />
+                                    </n-form-item>
+                                </n-grid-item>
+                                <n-grid-item>
+                                    <n-form-item label="行程订票服务">
+                                        <n-select v-model:value="formData.meetingRequirement.ticketBooking" :options="needOrNoneOptions" placeholder="请选择" clearable />
+                                    </n-form-item>
+                                </n-grid-item>
+                                <n-grid-item>
+                                    <n-form-item label="是否需要会外服务">
+                                        <n-select v-model:value="formData.meetingRequirement.outService" :options="outServiceOptions" placeholder="请选择" clearable />
+                                    </n-form-item>
+                                </n-grid-item>
+                                <n-grid-item>
+                                    <n-form-item label="宣传片/欢迎词">
+                                        <n-select v-model:value="formData.meetingRequirement.promoVideo" :options="promoVideoOptions" multiple placeholder="请选择" />
+                                    </n-form-item>
+                                </n-grid-item>
+                                <n-grid-item>
+                                    <n-form-item label="会议纪要" required>
+                                        <n-select v-model:value="formData.meetingRequirement.minutes" :options="minutesOptions" placeholder="请选择" />
+                                    </n-form-item>
+                                </n-grid-item>
+                                <n-grid-item>
+                                    <n-form-item label="会议/接待资料" required>
+                                        <n-select v-model:value="formData.meetingRequirement.materials" :options="yesOrNoneOptions" placeholder="请选择" />
+                                    </n-form-item>
+                                </n-grid-item>
+                                <n-grid-item>
+                                    <n-form-item label="会议/接待通知">
+                                        <n-select v-model:value="formData.meetingRequirement.notice" :options="yesOrNoneOptions" placeholder="请选择" clearable />
+                                    </n-form-item>
+                                </n-grid-item>
+                                <n-grid-item>
+                                    <n-form-item label="会议议程/接待流程" required>
+                                        <n-select v-model:value="formData.meetingRequirement.agenda" :options="yesOrNoneOptions" placeholder="请选择" />
+                                    </n-form-item>
+                                </n-grid-item>
+                                <n-grid-item :span="2">
+                                    <n-form-item label="其他备注（需写明）">
+                                        <n-input v-model:value="formData.meetingRequirement.remark" type="textarea" placeholder="请输入" :maxlength="255" show-count :rows="3" />
+                                    </n-form-item>
+                                </n-grid-item>
+                            </n-grid>
+                        </div>
                         <!-- 待办事项 -->
                         <div class="todo-section">
                             <div class="todo-header">
@@ -163,8 +315,120 @@ const formRef = ref<any>(null);
 const dialog = useDialog();
 const pageLoading = ref(false);
 const recordId = computed(() => route.query.id || undefined);
+const copyId = computed(() => route.query.copyId || undefined); // 复制模式：以该记录为模板新增
 const isEdit = computed(() => !!recordId.value);
 const pageTitle = computed(() => (isEdit.value ? '编辑来访记录' : '新增来访记录'));
+
+// ========== 会议需求问卷：默认值 ==========
+
+/**
+ * 创建会议需求问卷的默认数据
+ * 说明：编号由后端/多维表格自动生成（3 位递增数字），提交人、提交时间由系统记录，页面均不展示
+ * @returns {Record<string, any>} 会议需求默认值对象
+ */
+const createDefaultMeetingRequirement = () => ({
+    meetingName: '', // 会议/接待名称
+    meetingTime: null, // 会议/接待时间（yyyy-MM-dd HH:mm），null 供 DatePicker 空值解析
+    meetingLevel: '公司级会议/接待', // 会议/接待级别
+    meetingArea: '成都区域', // 会议/接待地区
+    meetingRoom1: '集团本部矿业会议室', // 会议室/接待室地点
+    meetingRoom2: null, // 会议室/接待室地点 2
+    meetingRoom3: null, // 会议室/接待室地点 3
+    nameplates: ['人员桌牌'], // 参会人桌牌（多选）
+    screen: '无', // 电脑/会议屏
+    projector: '无', // 投影仪
+    clicker: '无', // 翻页笔
+    microphone: '无', // 麦克风
+    tea: '矿泉水', // 会议茶水
+    teaBreak: '无', // 茶歇
+    lunch: null, // 接待午餐
+    dinner: null, // 接待晚餐
+    hotel: null, // 住房预定
+    pickUp: null, // 接机服务
+    dropOff: null, // 送机服务
+    ticketBooking: null, // 行程订票服务
+    outService: null, // 是否需要会外服务
+    promoVideo: ['PPT欢迎词'], // 宣传片/欢迎词（多选）
+    minutes: '需要（飞书智能会议记录）', // 会议纪要
+    materials: '无', // 会议/接待资料
+    notice: null, // 会议/接待通知
+    agenda: '无', // 会议议程/接待流程
+    remark: '', // 其他备注
+});
+
+// ========== 会议需求问卷：选项配置 ==========
+
+/** 将字符串数组转换为 naive-ui select 需要的 options 结构 */
+const toOptions = (list: string[]) => list.map((item) => ({ label: item, value: item }));
+
+/** 会议/接待级别选项 */
+const meetingLevelOptions = toOptions(['公司级会议/接待', '内部级会议/接待']);
+/** 会议/接待地区选项 */
+const meetingAreaOptions = toOptions(['成都区域', '卡哈洛区域', '雷波区域', '其他']);
+/** 会议室/接待室地点选项 */
+const meetingRoom1Options = toOptions(['集团本部矿业会议室', '前楼二楼会议室', '前楼二楼党建室', '后楼党建室', '前楼四楼会议厅', '线上会议', '其他']);
+/** 会议室/接待室地点 2 选项 */
+const meetingRoom2Options = toOptions(['磷动物流办公楼会议室', '实业办公楼会议室', '分公司办公楼会议室', '其他']);
+/** 会议室/接待室地点 3 选项 */
+const meetingRoom3Options = toOptions(['明玉小区办公区', '其他']);
+/** 参会人桌牌选项（多选） */
+const nameplateOptions = toOptions(['会议水牌', '人员桌牌', '无']);
+/** 电脑/会议屏选项 */
+const screenOptions = toOptions(['自备', '会议电脑', '会议屏幕', '无']);
+/** 需要/无 通用选项 */
+const needOrNoneOptions = toOptions(['需要', '无']);
+/** 有/无 通用选项 */
+const yesOrNoneOptions = toOptions(['有', '无']);
+/** 会议茶水选项 */
+const teaOptions = toOptions(['矿泉水', '茶叶', '其他', '无']);
+/** 茶歇选项 */
+const teaBreakOptions = toOptions(['小吃', '水果', '无']);
+/** 接待午餐/晚餐选项 */
+const receptionMealOptions = toOptions(['公司内接待餐', '公司外接待餐', '无']);
+/** 会外服务选项 */
+const outServiceOptions = toOptions(['需要', '不需要']);
+/** 宣传片/欢迎词选项（多选） */
+const promoVideoOptions = toOptions(['宣传片', 'PPT欢迎词', '无']);
+/** 会议纪要选项 */
+const minutesOptions = toOptions(['需要（飞书智能会议记录）', '需要（需求部门人员记录）', '需要（综合管理部人员记录）', '无']);
+
+/** 会议需求必填项（选择“是”时校验） */
+const meetingRequiredFields: Array<[string, string]> = [
+    ['meetingName', '会议/接待名称'],
+    ['meetingTime', '会议/接待时间'],
+    ['meetingLevel', '会议/接待级别'],
+    ['meetingArea', '会议/接待地区'],
+    ['meetingRoom1', '会议室/接待室地点'],
+    ['screen', '电脑/会议屏'],
+    ['projector', '投影仪'],
+    ['clicker', '翻页笔'],
+    ['microphone', '麦克风'],
+    ['tea', '会议茶水'],
+    ['teaBreak', '茶歇'],
+    ['minutes', '会议纪要'],
+    ['materials', '会议/接待资料'],
+    ['agenda', '会议议程/接待流程'],
+];
+
+/**
+ * 校验会议需求问卷（仅在“是否需要协助会议”为“是”时生效）
+ * @returns {boolean} 校验是否通过
+ */
+const validateMeetingRequirement = () => {
+    if (formData.needMeetingAssist !== 'YES') return true;
+    for (const [key, label] of meetingRequiredFields) {
+        const value = (formData.meetingRequirement as any)[key];
+        if (value === null || value === undefined || String(value).trim() === '') {
+            window.$message.warning(`请填写会议需求「${label}」`);
+            return false;
+        }
+    }
+    if (!Array.isArray(formData.meetingRequirement.nameplates) || formData.meetingRequirement.nameplates.length === 0) {
+        window.$message.warning('请选择会议需求「参会人桌牌」');
+        return false;
+    }
+    return true;
+};
 
 // ========== 表单数据 ==========
 const formData = reactive({
@@ -186,6 +450,8 @@ const formData = reactive({
     plusServicesList: [], // 增值服务
     plusServicesDetail: '', // 增值服务详情
     plusServicesExecution: '', // 增值服务执行情况
+    needMeetingAssist: 'NO', // 是否需要协助会议：YES / NO，默认否
+    meetingRequirement: createDefaultMeetingRequirement(), // 会议需求问卷数据
 });
 
 // ========== 选项配置 ==========
@@ -504,7 +770,7 @@ const contactScrollX = computed(() => {
 
 // ========== 表单验证规则 ==========
 const rules = {
-    customerId: { required: true, message: '请选择企业名称', trigger: ['change'], saveOnly: true },
+    customerId: { required: true, type: 'any', message: '请选择企业名称', trigger: ['change'], saveOnly: true },
     visitType: { required: true, message: '请选择来访类型', trigger: ['change'] },
     starLevel: { required: true, message: '请选择客户星级', trigger: ['change'] },
     actualTime: { required: true, message: '请选择来访时间', trigger: ['change'], saveOnly: true },
@@ -545,7 +811,7 @@ const getSavedRecordId = (res: any) => {
     return typeof responseData === 'number' || typeof responseData === 'string' ? responseData : res?.id;
 };
 
-/** 保存成功后询问是否发起来访记录的飞书提醒。 */
+/** 保存成功后询问是否提醒相关接待人员和协助部门。 */
 const confirmVisitRecordMessage = (id: number | string) =>
     new Promise<void>((resolve) => {
         let positivePending = false;
@@ -558,7 +824,7 @@ const confirmVisitRecordMessage = (id: number | string) =>
         };
         dialog.warning({
             title: '提示',
-            content: '是否立即发起飞书提醒？',
+            content: '是否提醒相关接待人员和协助部门？',
             closable: true,
             maskClosable: false,
             positiveText: '确定',
@@ -605,6 +871,10 @@ const buildSubmitData = (status: string) => {
         data.id = Number(recordId.value);
     }
 
+    // 未选择协助会议时，会议需求问卷置空
+    data.needMeetingAssist = formData.needMeetingAssist;
+    data.meetingRequirement = formData.needMeetingAssist === 'YES' ? JSON.parse(JSON.stringify(formData.meetingRequirement)) : null;
+
     console.log('提交数据', data);
     return data;
 };
@@ -647,6 +917,7 @@ const validateSave = (onSuccess: () => void) => {
                 console.log('保存表单验证失败', errors);
                 return;
             }
+            if (!validateMeetingRequirement()) return;
             const invalidTodoIndex = todoList.value.findIndex((item: any) => !item.dueTime);
             if (invalidTodoIndex >= 0) {
                 window.$message.warning(`待办事项第${invalidTodoIndex + 1}行「截止完成时间」未填写`);
@@ -665,6 +936,7 @@ const validateAll = (onSuccess: () => void) => {
             console.log('表单验证失败', errors);
             return;
         }
+        if (!validateMeetingRequirement()) return;
         // 校验待办事项
         if (todoList.value && todoList.value.length > 0) {
             for (let i = 0; i < todoList.value.length; i++) {
@@ -689,11 +961,12 @@ const validateAll = (onSuccess: () => void) => {
 
 // ========== 编辑回显数据 ==========
 
-const loadDetailData = async () => {
-    if (!recordId.value) return;
+const loadDetailData = async (id: any = null, isCopy = false) => {
+    const targetId = id ?? recordId.value;
+    if (!targetId) return;
     pageLoading.value = true;
     try {
-        const res: any = await getVisitRecordApi(Number(recordId.value));
+        const res: any = await getVisitRecordApi(Number(targetId));
         const d = res?.data;
         if (!d) return;
         Object.assign(formData, {
@@ -715,6 +988,8 @@ const loadDetailData = async () => {
             plusServicesList: d.plusServicesList || [],
             plusServicesDetail: d.plusServicesDetail || '',
             plusServicesExecution: d.plusServicesExecution || '',
+            needMeetingAssist: d.needMeetingAssist || 'NO',
+            meetingRequirement: { ...createDefaultMeetingRequirement(), ...(d.meetingRequirement || {}) },
         });
 
         // 待办事项回显
@@ -737,6 +1012,7 @@ const loadDetailData = async () => {
                     };
                 })
                 : [];
+        if (isCopy) formData.status = ''; // 复制模式：单据状态重置为草稿
     } catch (err) {
         console.error('加载详情失败', err);
     } finally {
@@ -748,6 +1024,8 @@ onMounted(() => {
     loadReceptionSpecDict(); // 加载接待规格字典
     if (isEdit.value) {
         loadDetailData();
+    } else if (copyId.value) {
+        loadDetailData(copyId.value, true); // 复制模式：载入模板数据但不带ID与状态
     }
 });
 </script>
@@ -773,6 +1051,24 @@ onMounted(() => {
         font-size: 12px;
         color: #999;
         margin-top: 8px;
+    }
+
+    .meeting-section {
+        margin: 4px 0 16px;
+        padding: 16px 16px 0;
+        background: #f8fafc;
+        border: 1px solid #e6ebf2;
+        border-radius: 6px;
+
+        .meeting-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 16px;
+            padding-left: 8px;
+            border-left: 3px solid var(--base-color);
+            line-height: 16px;
+        }
     }
 
     .todo-section {

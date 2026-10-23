@@ -1,6 +1,6 @@
 import service from './request';
 import { CRM_BASE_URL_PREFIX, TMS_BASE_URL_PREFIX } from './urlConfig';
-// 发运计划本地联调示例数据，保留用于接口未联通时对照字段结构。
+// 发货订单本地联调示例数据，保留用于接口未联通时对照字段结构。
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const dataList = [
       {
@@ -153,9 +153,9 @@ import { CRM_BASE_URL_PREFIX, TMS_BASE_URL_PREFIX } from './urlConfig';
       },
     ]
 /**
- * 获取发运计划分页列表。
+ * 获取发货订单分页列表。
  * @param data 查询条件和分页参数
- * @returns 发运计划分页数据请求结果
+ * @returns 发货订单分页数据请求结果
  */
 export function getDailyShippingPlanPageApi(data?: any) {
     return service.request({
@@ -185,8 +185,8 @@ export function getDailyShippingPlanDetailPageApi(data?: any) {
 }
 
 /**
- * 校验是否存在可新增的待执行发运计划数据。
- * @param id 发运计划 ID，不传时校验当前是否有待生成数据
+ * 校验是否存在可新增的待执行发货订单数据。
+ * @param id 发货订单 ID，不传时校验当前是否有待生成数据
  * @returns 待生成数据校验结果
  */
 export function getDailyShippingPlanCheckHasPendingDataApi(id?: string | number) {
@@ -201,9 +201,9 @@ export function getDailyShippingPlanCheckHasPendingDataApi(id?: string | number)
 }
 
 /**
- * 根据月发货计划编号获取可生成的发运计划明细。
+ * 根据月发货计划编号获取可生成的发货订单明细。
  * @param planCode 月发货计划编号
- * @returns 发运计划明细列表请求结果
+ * @returns 发货订单明细列表请求结果
  */
 export function getDailyShippingPlanDetailListByPlanCodeApi(planCode: string) {
     return service.request({
@@ -259,8 +259,8 @@ export function getPreShipmentDetailListApi(customerId?: string | number) {
 }
 
 /**
- * 新增发运计划。
- * @param data 发运计划主表和明细提交数据
+ * 新增发货订单。
+ * @param data 发货订单主表和明细提交数据
  * @returns 新增请求结果
  */
 export function createDailyShippingPlanApi(data: any) {
@@ -277,8 +277,8 @@ export function createDailyShippingPlanApi(data: any) {
 }
 
 /**
- * 更新发运计划。
- * @param data 发运计划主表和明细提交数据
+ * 更新发货订单。
+ * @param data 发货订单主表和明细提交数据
  * @returns 更新请求结果
  */
 export function updateDailyShippingPlanApi(data: any) {
@@ -295,8 +295,8 @@ export function updateDailyShippingPlanApi(data: any) {
 }
 
 /**
- * 删除发运计划。
- * @param id 发运计划 ID
+ * 删除发货订单。
+ * @param id 发货订单 ID
  * @returns 删除请求结果
  */
 export function deleteDailyShippingPlanApi(id: string | number) {
@@ -312,7 +312,7 @@ export function deleteDailyShippingPlanApi(id: string | number) {
 }
 
 /**
- * 更新发运计划明细状态。
+ * 更新发货订单明细状态。
  * @param data 明细 ID 和目标状态
  * @param successMessage 操作成功提示文案
  * @returns 状态更新请求结果
@@ -383,8 +383,8 @@ export function getTransportPlanStatusListApi(data: any) {
 }
 
 /**
- * 获取发运计划明细详情，并兼容后端新旧字段。
- * @param id 发运计划明细 ID
+ * 获取发货订单明细详情，并兼容后端新旧字段。
+ * @param id 发货订单明细 ID
  * @returns 标准化后的明细详情请求结果
  */
 export function getDailyShippingPlanDetailItemApi(id: string | number) {
@@ -412,7 +412,7 @@ export function getDailyShippingPlanDetailItemApi(id: string | number) {
 }
 
 /**
- * 统一发运计划明细字段，兼容新增、编辑、详情页面展示和提交。
+ * 统一发货订单明细字段，兼容新增、编辑、详情页面展示和提交。
  * @param item 后端返回的明细原始数据
  * @returns 补齐旧字段别名后的明细数据
  */
@@ -483,9 +483,9 @@ const formatContractCodeDisplay = (data: any, details: any[]) => {
 };
 
 /**
- * 统一发运计划主表字段，并批量标准化明细字段。
- * @param data 后端返回的发运计划原始数据
- * @returns 页面可直接使用的发运计划详情数据
+ * 统一发货订单主表字段，并批量标准化明细字段。
+ * @param data 后端返回的发货订单原始数据
+ * @returns 页面可直接使用的发货订单详情数据
  */
 const normalizeDailyShippingPlan = (data: any = {}) => {
     const details = (data.details || []).map((item: any) => normalizeDailyShippingDetail(item));
@@ -500,10 +500,10 @@ const normalizeDailyShippingPlan = (data: any = {}) => {
 };
 
 /**
- * 获取发运计划详情。
- * @param id 发运计划 ID
+ * 获取发货订单详情。
+ * @param id 发货订单 ID
  * @param type 是否按编辑场景获取详情
- * @returns 标准化后的发运计划详情请求结果
+ * @returns 标准化后的发货订单详情请求结果
  */
 export function getDailyShippingPlanDetailApi(id: string | number, type?: boolean) {
     return service

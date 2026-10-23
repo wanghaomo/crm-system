@@ -117,6 +117,39 @@
                         <pre class="block-value pre-wrap">{{ detailData.plusServicesExecution || '--' }}</pre>
                     </div>
                 </div>
+                <!-- 会议需求tab：仅当需要协助会议时展示 -->
+                <div v-else-if="activeTab === 'meeting'" class="tab-content" style="padding: 24px;">
+                    <n-descriptions v-if="detailData.meetingRequirement" bordered :column="2" size="small" label-placement="left">
+                        <n-descriptions-item label="会议/接待名称">{{ detailData.meetingRequirement.meetingName || '--' }}</n-descriptions-item>
+                        <n-descriptions-item label="会议/接待时间">{{ detailData.meetingRequirement.meetingTime || '--' }}</n-descriptions-item>
+                        <n-descriptions-item label="会议/接待级别">{{ detailData.meetingRequirement.meetingLevel || '--' }}</n-descriptions-item>
+                        <n-descriptions-item label="会议/接待地区">{{ detailData.meetingRequirement.meetingArea || '--' }}</n-descriptions-item>
+                        <n-descriptions-item label="会议室/接待室地点">{{ detailData.meetingRequirement.meetingRoom1 || '--' }}</n-descriptions-item>
+                        <n-descriptions-item label="会议室/接待室地点 2">{{ detailData.meetingRequirement.meetingRoom2 || '--' }}</n-descriptions-item>
+                        <n-descriptions-item label="会议室/接待室地点 3">{{ detailData.meetingRequirement.meetingRoom3 || '--' }}</n-descriptions-item>
+                        <n-descriptions-item label="参会人桌牌">{{ (detailData.meetingRequirement.nameplates || []).join('、') || '--' }}</n-descriptions-item>
+                        <n-descriptions-item label="电脑/会议屏">{{ detailData.meetingRequirement.screen || '--' }}</n-descriptions-item>
+                        <n-descriptions-item label="投影仪">{{ detailData.meetingRequirement.projector || '--' }}</n-descriptions-item>
+                        <n-descriptions-item label="翻页笔">{{ detailData.meetingRequirement.clicker || '--' }}</n-descriptions-item>
+                        <n-descriptions-item label="麦克风">{{ detailData.meetingRequirement.microphone || '--' }}</n-descriptions-item>
+                        <n-descriptions-item label="会议茶水">{{ detailData.meetingRequirement.tea || '--' }}</n-descriptions-item>
+                        <n-descriptions-item label="茶歇">{{ detailData.meetingRequirement.teaBreak || '--' }}</n-descriptions-item>
+                        <n-descriptions-item label="接待午餐">{{ detailData.meetingRequirement.lunch || '--' }}</n-descriptions-item>
+                        <n-descriptions-item label="接待晚餐">{{ detailData.meetingRequirement.dinner || '--' }}</n-descriptions-item>
+                        <n-descriptions-item label="住房预定">{{ detailData.meetingRequirement.hotel || '--' }}</n-descriptions-item>
+                        <n-descriptions-item label="接机服务">{{ detailData.meetingRequirement.pickUp || '--' }}</n-descriptions-item>
+                        <n-descriptions-item label="送机服务">{{ detailData.meetingRequirement.dropOff || '--' }}</n-descriptions-item>
+                        <n-descriptions-item label="行程订票服务">{{ detailData.meetingRequirement.ticketBooking || '--' }}</n-descriptions-item>
+                        <n-descriptions-item label="是否需要会外服务">{{ detailData.meetingRequirement.outService || '--' }}</n-descriptions-item>
+                        <n-descriptions-item label="宣传片/欢迎词">{{ (detailData.meetingRequirement.promoVideo || []).join('、') || '--' }}</n-descriptions-item>
+                        <n-descriptions-item label="会议纪要">{{ detailData.meetingRequirement.minutes || '--' }}</n-descriptions-item>
+                        <n-descriptions-item label="会议/接待资料">{{ detailData.meetingRequirement.materials || '--' }}</n-descriptions-item>
+                        <n-descriptions-item label="会议/接待通知">{{ detailData.meetingRequirement.notice || '--' }}</n-descriptions-item>
+                        <n-descriptions-item label="会议议程/接待流程">{{ detailData.meetingRequirement.agenda || '--' }}</n-descriptions-item>
+                        <n-descriptions-item label="其他备注（需写明）" :span="2">{{ detailData.meetingRequirement.remark || '--' }}</n-descriptions-item>
+                    </n-descriptions>
+                    <div v-else>--</div>
+                </div>
                 <!-- 待办事项tab -->
                 <div v-else-if="activeTab === 'todo'" class="tab-content">
                     <div class="table-wrapper">
@@ -129,8 +162,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive, h, resolveComponent } from 'vue';
-import { NTabs, NTab, NSpin } from 'naive-ui';
+import { ref, computed, onMounted, reactive, h, resolveComponent } from 'vue';
+import { NTabs, NTab, NSpin, NDescriptions, NDescriptionsItem } from 'naive-ui';
 import MxEditorPreview from '@/components/MxEditor/preview.vue';
 import { getVisitRecordApi, completeTodoApi } from '@/api/customerManage';
 import { STATUS_MAP, STAR_LEVEL_MAP } from '@/config/customer';
@@ -219,10 +252,17 @@ const visitTypeMap: Record<string, string> = {
 };
 
 
-const tabList = [
-    { label: '基础信息', value: 'basic' },
-    { label: '待办事项', value: 'todo' },
-];
+const tabList = computed(() => {
+    const list = [
+        { label: '基础信息', value: 'basic' },
+        { label: '待办事项', value: 'todo' },
+    ];
+    // 仅当需要协助会议时，展示会议需求页签
+    if (detailData.value?.needMeetingAssist === 'YES') {
+        list.push({ label: '会议需求', value: 'meeting' });
+    }
+    return list;
+});
 
 // 加载详情数据
 const loadDetail = async (id: number | string) => {

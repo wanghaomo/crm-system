@@ -43,17 +43,13 @@
             <div class="detail-content">
                 <div class="detail-header">
                     <div class="detail-header-top">
-                        <span class="detail-title">{{ detailData.competitorName || '--' }}</span>
+                        <span class="detail-title">{{ getCompetitorName(detailData) }}</span>
                         <StatusTag :text="detailData.statusName || getStatusText(detailData.status)" color="#5AA771" bgColor="#F0F9EB" borderColor='#E2F4D8' />
                     </div>
                     <div class="detail-header-info">
                         <div class="info-item">
                             <span class="info-label">录入人</span>
                             <span class="info-value">{{ detailData.inputPerson || '--' }}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">区域</span>
-                            <MxDict v-if="detailData.region" :modelValue="detailData.region" dictType="区域类型" text />
                         </div>
                         <div class="info-item">
                             <span class="info-label">录入时间</span>
@@ -67,19 +63,6 @@
                     <n-descriptions label-placement="left" :column="2" :separator="false" class="detail-descriptions">
                         <n-descriptions-item label="调研月份">
                             {{ formatSurveyMonth(detailData.surveyMonth) }}
-                        </n-descriptions-item>
-                        <n-descriptions-item label="矿山类型">
-                            <MxDict v-if="detailData.mineType" :modelValue="detailData.mineType" dictType="矿山类型" text />
-                            <span v-else>--</span>
-                        </n-descriptions-item>
-                        <n-descriptions-item label="详细地址">
-                            {{ detailData.detailAddress || '--' }}
-                        </n-descriptions-item>
-                        <n-descriptions-item label="联系人">
-                            {{ detailData.contactPerson || '--' }}
-                        </n-descriptions-item>
-                        <n-descriptions-item label="联系电话">
-                            {{ detailData.contactPhone || '--' }}
                         </n-descriptions-item>
                         <n-descriptions-item label="开工率(%)">
                             <span :class="{ 'text-error': isOperatingRateInvalid(detailData.operatingRate) }">
@@ -117,6 +100,17 @@
                             {{ detailData.priceChangeReason || '--' }}
                         </n-descriptions-item>
                     </n-descriptions>
+                </div>
+
+                <div class="detail-section">
+                    <div class="section-title"><span class="section-bar"></span>矿石供给</div>
+                    <n-data-table
+                        :columns="oreSupplyColumns"
+                        :data="detailData.oreSupplyList || []"
+                        :bordered="true"
+                        :single-line="false"
+                        size="small"
+                        :max-height="220" />
                 </div>
 
                 <div class="detail-section chart-pair">
@@ -161,10 +155,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, h, watch, onMounted, onBeforeUnmount, nextTick, resolveComponent } from 'vue';
+import { ref, reactive, h, watch, onMounted, onBeforeUnmount, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 import * as echarts from 'echarts';
-import { NDescriptions, NDescriptionsItem, NEmpty, NModal, NSelect, NSpin, useMessage } from 'naive-ui';
+import { NDataTable, NDescriptions, NDescriptionsItem, NEmpty, NModal, NSelect, NSpin, useMessage } from 'naive-ui';
 import {
     queryCompetitorListApi,
     queryCompetitorDetailApi,
@@ -244,27 +238,19 @@ const downloadBlob = (res: any, fallbackName: string) => {
 
 // 接口字段和旧页面字段存在过渡差异，这里只在显示层兼容旧别名。
 const getCompetitorName = (row: any) => row.competitorName || row.enterpriseName || '--';
+
+// 详情「矿石供给」表格列
+const oreSupplyColumns = [
+    { title: '客户名称', key: 'customerName', minWidth: 200 },
+    { title: '数量(万吨)', key: 'quantity', width: 140, render: (row: any) => formatNumber(row.quantity, 1) },
+];
 const getInventory = (row: any) => row.inventory ?? row.oreInventory;
 const getWharfInventory = (row: any) => row.wharfInventory ?? row.mainTerminalInventory;
 
 // ==================== 搜索配置 ====================
 const queryConfiguration = [
-    { type: 'input', label: '', value: 'competitorName', placeholder: '竞争对手名称' },
+    { type: 'input', label: '', value: 'competitorName', placeholder: '企业名称' },
     { type: 'monthrange', label: '调研月份', value: 'surveyMonth', placeholder: '请选择调研月份' },
-    {
-        value: 'region',
-        defaultValue: '',
-        type: 'dict',
-        dictType: '区域类型',
-        placeholder: '区域',
-    },
-    {
-        value: 'mineType',
-        defaultValue: '',
-        type: 'dict',
-        dictType: '矿山类型',
-        placeholder: '矿山类型',
-    },
     {
         type: 'select', label: '状态', value: 'status', placeholder: '请选择状态', options: [
             { label: '草稿', value: 'DRAFT' },
@@ -275,31 +261,7 @@ const queryConfiguration = [
 
 // ==================== 表格列 ====================
 const tableColumns = [
-    { title: '竞争对手名称', key: 'competitorName', width: 150, ellipsis: { tooltip: true }, render: (row: any) => getCompetitorName(row) },
-    {
-        title: '区域', key: 'region', width: 120, render: (row: any) => {
-            const MxDict = resolveComponent('MxDict');
-            return h(MxDict as any, {
-                modelValue: row.region,
-                placeholder: '请选择',
-                size: 'small',
-                text: true,
-                dictType: '区域类型'
-            });
-        },
-    },
-    {
-        title: '矿山类型', key: 'mineType', width: 120, render: (row: any) => {
-            const MxDict = resolveComponent('MxDict');
-            return h(MxDict as any, {
-                modelValue: row.mineType,
-                placeholder: '请选择',
-                size: 'small',
-                text: true,
-                dictType: '矿山类型'
-            });
-        },
-    },
+    { title: '企业名称', key: 'competitorName', width: 150, ellipsis: { tooltip: true }, render: (row: any) => getCompetitorName(row) },
     {
         title: '单据状态', key: 'status', width: 100,
         render: renderStatus
@@ -338,8 +300,6 @@ const queryParams = ref({
     competitorName: '',
     surveyMonthStart: '',
     surveyMonthEnd: '',
-    region: '',
-    mineType: '',
     status: '',
 });
 
@@ -416,8 +376,6 @@ const tableConfig = ref<any>({
 const handleSearch = (queryObj: any) => {
     const surveyMonth = queryObj.surveyMonth || [];
     queryParams.value.competitorName = queryObj.competitorName || '';
-    queryParams.value.region = queryObj.region || '';
-    queryParams.value.mineType = queryObj.mineType || '';
     queryParams.value.status = queryObj.status || '';
     queryParams.value.surveyMonthStart = normalizeSurveyMonth(surveyMonth[0]);
     queryParams.value.surveyMonthEnd = normalizeSurveyMonth(surveyMonth[1]);

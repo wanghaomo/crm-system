@@ -142,6 +142,8 @@ function buildCode(module: string, index: number): string {
 /** 各业务模块的状态枚举（中文与真实系统一致） */
 const MODULE_STATUS: Record<string, { status: string; statusName: string }> = {
     customer: { status: 'STORAGE', statusName: '已入库' },
+    competitorBase: { status: 'STORAGE', statusName: '已入库' },
+    competitor: { status: 'ARCHIVED', statusName: '已归档' },
     salesContract: { status: 'EXECUTING', statusName: '执行中' },
     frameworkContract: { status: 'EXECUTING', statusName: '执行中' },
     settlement: { status: 'SETTLED', statusName: '已结算' },
@@ -280,6 +282,8 @@ function detectModule(url: string): string {
     if (/shipmentDaily/i.test(url)) return 'dailyShipping';
     if (/pricing|salesPlanBasePricing/i.test(url)) return 'pricing';
     if (/aiReport/i.test(url)) return 'aiPrediction';
+    if (/marketCompetitorBase/i.test(url)) return 'competitorBase';
+    if (/marketSurveyCompetitor/i.test(url)) return 'competitor';
     if (/starIndicator|customerStar|indicatorConfig/i.test(url)) return 'starIndicator';
     if (/serviceRule|reminderConfig|notificationConfig/i.test(url)) return 'systemConfig';
     return 'default';
@@ -331,6 +335,81 @@ function buildDomainFields(module: string, index: number): Record<string, any> {
                 starLevel: STAR_LEVELS[index % STAR_LEVELS.length],
                 cooperationYears: (index % 8) + 1,
                 totalCooperation: Number((rand * 40 + 2).toFixed(2)),
+                addressRegion: REGIONS[index % REGIONS.length], // 地址（省市区全路径，demo 用区域文本代替）
+                detailAddress: `工业园区${(index % 9) + 1}号路${(index % 20) + 1}号`, // 详细地址
+                longitude: Number((103.5 + rand).toFixed(6)), // 经度
+                latitude: Number((28.5 + rand).toFixed(6)), // 纬度
+                isCooperationCustomer: index % 4 === 0 ? 'NO' : 'YES', // 是否合作客户
+            };
+        case 'competitor':
+        case 'competitor':
+            return {
+                competitorName: `竞争对手-${company}`, // 企业名称（与竞争对手档案库 enterpriseName 一致，便于关联查询）
+                region: index % 3 === 0 ? '湖北' : '川内', // 区域
+                mineType: index % 2 === 0 ? '大型矿山' : '中小型矿山', // 矿山类型
+                surveyMonth: `2026-${String((index % 9) + 1).padStart(2, '0')}`, // 调研月份
+                inventory: Number((rand * 100 + 5).toFixed(1)), // 矿石库存（万吨）
+                operatingRate: Math.floor(rand * 41) + 60, // 开工率（%）
+                rateChangeReason: index % 2 === 0 ? '下游需求旺盛，产线满负荷运行' : '', // 开工率变化原因
+                monthlyOutput: Number((rand * 30 + 5).toFixed(1)), // 月产量（万吨）
+                maxOutput: Number((rand * 40 + 30).toFixed(1)), // 最大产能（万吨/月）
+                productGrade: Number((rand * 10 + 28).toFixed(1)), // 产品品位（%）
+                wharfName: `${['宜宾港', '泸州港', '重庆港', '万州港'][index % 4]}码头`, // 主要码头名称
+                wharfInventory: Number((rand * 20 + 1).toFixed(1)), // 主要码头库存（万吨）
+                salesPrice: Math.floor(rand * 120) + 680, // 销售价格（元/吨）
+                salesChannel: index % 2 === 0 ? '直供化工企业' : '贸易商分销', // 销售渠道
+                priceChangeReason: index % 3 === 0 ? '运费上涨带动到岸价上调' : '', // 价格变动原因
+                inputPerson: person, // 录入人
+                inputTime: buildDate(index), // 录入时间
+                // 矿石供给（客户名称 + 数量）
+                oreSupplyList: index % 2 === 0
+                    ? [{ customerName: REAL_COMPANIES[(index + 3) % REAL_COMPANIES.length], quantity: Number((rand * 15 + 2).toFixed(1)) }]
+                    : [
+                        { customerName: REAL_COMPANIES[(index + 1) % REAL_COMPANIES.length], quantity: Number((rand * 12 + 3).toFixed(1)) },
+                        { customerName: REAL_COMPANIES[(index + 5) % REAL_COMPANIES.length], quantity: Number((rand * 8 + 1).toFixed(1)) },
+                    ],
+            };
+        case 'competitorBase':
+            return {
+                enterpriseName: `竞争对手-${company}`,
+                mineName: `${['马边', '雷波', '叙永', '绵竹', '清平'][index % 5]}磷矿${(index % 9) + 1}号井`, // 矿山名称（唯一）
+                resourceReserves: Number((rand * 8000 + 500).toFixed(1)), // 资源储存量（万吨）
+                designCapacity: Number((rand * 300 + 50).toFixed(1)), // 设计开采能力（万吨/年）
+                mineType: index % 2 === 0 ? '大型矿山' : '中小型矿山', // 矿山类型
+                yearOutput: Number((rand * 200 + 30).toFixed(1)), // 年产量（万吨）
+                contactPerson: person, // 联系人
+                contactPhone: `139${String(80000000 + index * 131).slice(0, 8)}`, // 联系电话
+                oreStock: Number((rand * 100).toFixed(1)), // 矿石库存（万吨）
+                operatingRate: Math.floor(rand * 41) + 60, // 开工率（%）
+                region: index % 3 === 0 ? '湖北' : '川内', // 区域
+                addressRegion: '四川省/乐山市/马边彝族自治县', // 地址（省市区）
+                detailAddress: `工业园区${(index % 9) + 1}号路${(index % 20) + 1}号`, // 详细地址
+                longitude: Number((103.5 + rand).toFixed(6)), // 经度
+                latitude: Number((28.5 + rand).toFixed(6)), // 纬度
+                remark: index % 3 === 0 ? '重点关注旺季供货需求' : '', // 备注
+                // 调研数据记录（模拟最近两次调研）
+                researchRecordList: [
+                    {
+                        id: (index + 1) * 100 + 1,
+                        surveyMonth: '2026-09',
+                        oreStock: Number((rand * 90 + 5).toFixed(1)),
+                        operatingRate: Math.floor(rand * 41) + 60,
+                        mainProductScale: `磷矿石 ${Math.floor(rand * 150 + 50)}万吨/年`,
+                        nextMonthPlan: Number((rand * 20 + 5).toFixed(1)),
+                        yearOutput: Number((rand * 200 + 30).toFixed(1)),
+                        remark: '库存环比下降，出货节奏加快',
+                    },
+                    {
+                        id: (index + 1) * 100 + 2,
+                        surveyMonth: '2026-10',
+                        oreStock: Number((rand * 100 + 8).toFixed(1)),
+                        operatingRate: Math.floor(rand * 41) + 60,
+                        mainProductScale: `磷矿石 ${Math.floor(rand * 150 + 50)}万吨/年`,
+                        nextMonthPlan: Number((rand * 25 + 8).toFixed(1)),
+                        yearOutput: Number((rand * 200 + 30).toFixed(1)),
+                        remark: '新增一条洗选线，开工率提升',
+                    },
+                ],
             };
         case 'visitRecord':
             return {
@@ -601,6 +680,8 @@ function buildRow(index: number, module = 'default'): Record<string, any> {
     Object.assign(row, buildDomainFields(module, index));
     const statusConfig = MODULE_STATUS[module] || MODULE_STATUS.default;
     FIELD_KEYS.forEach((key) => {
+        // 序号 index 由前端表格自行生成，mock 不填充（避免 CommSelect 图标位渲染出兜底文本）
+        if (key === 'index') return;
         if (!(key in row)) {
             row[key] = buildValue(key, index);
         }
@@ -902,6 +983,21 @@ function resolvePayload(config: any): any {
         };
     }
 
+    // 5.5 客户对接人列表（关键决策人自动带出数据源）
+    if (/customerCall\/contactList/i.test(url)) {
+        const cid = Number(extractPathId(url)) || 1;
+        return {
+            code: 200,
+            msg: 'success',
+            success: true,
+            data: [
+                { id: cid * 100 + 1, contactName: '张伟', contactPost: '采购总监', contactDuty: '负责原材料采购决策' },
+                { id: cid * 100 + 2, contactName: '李强', contactPost: '采购主管', contactDuty: '负责供应商对接与比价' },
+                { id: cid * 100 + 3, contactName: '王芳', contactPost: '质检经理', contactDuty: '负责来料质检标准制定' },
+            ],
+        };
+    }
+
     // 6. 埋点、上传等无需业务的接口
     if (/goSystem/i.test(url)) return { code: 200, msg: 'success', success: true, data: true };
     if (/oss\/upload|upload/i.test(url)) {
@@ -920,6 +1016,14 @@ function resolvePayload(config: any): any {
     // 8. 分页列表
     if (/\/page$|\/pageList$|page$/i.test(url)) {
         return { code: 200, msg: 'success', success: true, data: buildPage(module, size, current, body) };
+    }
+
+    // 8.5 客户下拉列表：内部业务流程仅允许选择合作客户（竞争对手调研/化工企业调研不传该参数，返回全部客户）
+    if (/customerBase\/list/i.test(url) && body.isCooperationCustomer === 'YES') {
+        const rows = getModuleStore('customer')
+            .filter((row) => row.isCooperationCustomer === 'YES')
+            .slice(0, 20);
+        return { code: 200, msg: 'success', success: true, data: rows };
     }
 
     // 9. 列表数据（含 listCustomerCapital 这类以 list 开头、但返回分页结构的接口）

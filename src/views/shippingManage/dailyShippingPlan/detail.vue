@@ -8,6 +8,6 @@
 import PcView from './webCpns/detail.vue';
 import MobileView from './appCpns/detail.vue';
 import { isApp } from '@/utils/comm';
-// 根据运行容器切换 PC / App 发运计划详情页。
+// 根据运行容器切换 PC / App 发货订单详情页。
 const _isApp = isApp();
 </script>

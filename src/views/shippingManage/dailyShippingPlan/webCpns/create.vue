@@ -1,7 +1,12 @@
 <template>
     <WebPage contentPadding="0px" :hideAddBtn="true" showBack  show-back-confirm back-title="返回确认" back-content="是否确认返回？返回后编辑内容将不会被提交">
         <template #headerRight>
-            <MxButton :disabled="submitLoading || submitConfirming || detailLoading" @click="handleSubmit">提 交</MxButton>
+            <MxButton
+                border
+                :styleOption="{ color: '#2C65F2', borderColor: '#2C65F2', backgroundColor: '#fff' }"
+                :disabled="saveLoading || submitLoading || submitConfirming || detailLoading"
+                @click="handleSave">保 存</MxButton>
+            <MxButton :disabled="saveLoading || submitLoading || submitConfirming || detailLoading" @click="handleSubmit">提 交</MxButton>
         </template>
         <template #content>
             <div class="main">
@@ -44,7 +49,7 @@
                     </div>
                     <div class="title">
                         <span class="title-text">发货订单明细</span>
-                        <n-button v-if="isPrePlan" type="primary" size="small" @click="handleAddPreDetail">
+                        <n-button v-if="isPrePlan && !isPreExecutingEdit" type="primary" size="small" @click="handleAddPreDetail">
                             新增
                         </n-button>
                     </div>
@@ -116,8 +121,10 @@ const { dictMap } = storeToRefs(useDictStore());
 const formRef = ref<any>(null);
 const submitLoading = ref(false);
 const submitConfirming = ref(false);
+const saveLoading = ref(false);
 const formData = reactive<any>({
     id: '',
+    status: '',
     planType: DAILY_SHIPPING_PLAN_TYPE.CONTRACT,
     contractCodes: [],
     tableList: [],
@@ -144,10 +151,26 @@ const pageTitle = computed(() => (route.query.id ? '编辑发货订单' : '新�
 const isEditMode = computed(() => Boolean(route.query.id));
 const isContractPlan = computed(() => formData.planType === DAILY_SHIPPING_PLAN_TYPE.CONTRACT);
 const isPrePlan = computed(() => formData.planType === DAILY_SHIPPING_PLAN_TYPE.PRE);
+// 执行中的预发货订单编辑模式：仅允许编辑合同数量，其余明细字段只读。
+const isPreExecutingEdit = computed(
+    () =>
+        isEditMode.value &&
+        formData.planType === DAILY_SHIPPING_PLAN_TYPE.PRE &&
+        formData.status === PLAN_STATUS_CONSTANT.EXECUTING
+);
+/**
+ * 判断执行中的预发货订单明细字段是否可编辑（仅合同数量开放编辑）。
+ * @param key 明细字段名
+ * @returns 是否允许编辑
+ */
+const isDetailFieldEditable = (key: string) => {
+    if (!isPreExecutingEdit.value) return true;
+    return key === 'contractQuantity';
+};
 const checkedDetailRowKeys = ref<Array<string | number>>([]);
 const TEMP_DETAIL_ROW_PREFIX = 'TEMP_DAILY_SHIPPING_DETAIL';
 let detailRequestSerial = 0;
-// 发运计划明细使用的业务字典名称。
+// 发货订单明细使用的业务字典名称。
 const DICT = {
     SUPPLIER_UNIT: '供方单位',
     ORE_TYPE: '矿种',
@@ -864,7 +887,7 @@ const validateContractDetailSelection = (checkedDetails: any[]) => {
 };
 
 /**
- * 构建发运计划新增或编辑提交参数。
+ * 构建发货订单新增或编辑提交参数。
  * @param status 主单目标状态
  * @returns 后端接口需要的主表和明细参数
  */
@@ -991,6 +1014,7 @@ const detailTableColumns = computed<any[]>(() => [
         isRule: true,
         width: 140,
         render(row: any, index: number) {
+            if (!isDetailFieldEditable('priority')) return formatDict(DICT.PRIORITY, row.priority);
             return renderDetailFormItem(row, index, 'priority', '优先级', () =>
                 h(NSelect, {
                     value: row.priority,
@@ -1010,7 +1034,8 @@ const detailTableColumns = computed<any[]>(() => [
         title: () => (isPrePlan.value ? renderRequiredTitle('供方单位') : '供方单位'),
         width: 200,
         render(row: any, index: number) {
-            if (!isPrePlan.value) return formatDict(DICT.SUPPLIER_UNIT, row.supplierUnit);
+            if (!isPrePlan.value || !isDetailFieldEditable('supplierUnit'))
+                return formatDict(DICT.SUPPLIER_UNIT, row.supplierUnit);
             return renderDetailFormItem(row, index, 'supplierUnit', '供方单位', () =>
                 h(NSelect, {
                     value: row.supplierUnit,
@@ -1030,7 +1055,7 @@ const detailTableColumns = computed<any[]>(() => [
         title: () => (isPrePlan.value ? renderRequiredTitle('企业名称') : '企业名称'),
         width: 220,
         render(row: any, index: number) {
-            if (!isPrePlan.value) return row.companyname || '--';
+            if (!isPrePlan.value || !isDetailFieldEditable('companyname')) return row.companyname || '--';
             return renderDetailFormItem(row, index, 'customerId', '企业名称', () =>
                 h(MxCommSelect, {
                     key: getDetailRowKey(row),
@@ -1067,6 +1092,7 @@ const detailTableColumns = computed<any[]>(() => [
         isRule: true,
         width: 220,
         render(row: any, index: number) {
+            if (!isDetailFieldEditable('contactInformation')) return row.contactInformation || '--';
             return renderDetailFormItem(row, index, 'contactInformation', '联系方式', () =>
                 h(NInput, {
                     value: row.contactInformation,
@@ -1090,7 +1116,7 @@ const detailTableColumns = computed<any[]>(() => [
         title: () => (isPrePlan.value ? renderRequiredTitle('矿石品位（%）') : '矿石品位（%）'),
         width: 140,
         render(row: any, index: number) {
-            if (!isPrePlan.value) return row.oreGgrade ?? '--';
+            if (!isPrePlan.value || !isDetailFieldEditable('oreGgrade')) return row.oreGgrade ?? '--';
             return renderDetailFormItem(row, index, 'oreGgrade', '矿石品位（%）', () =>
                 h(NInputNumber, {
                     value: row.oreGgrade,
@@ -1112,7 +1138,7 @@ const detailTableColumns = computed<any[]>(() => [
         title: () => (isPrePlan.value ? renderRequiredTitle('矿石种类') : '矿石种类'),
         width: 140,
         render(row: any, index: number) {
-            if (!isPrePlan.value) return formatDict(DICT.ORE_TYPE, row.oreType);
+            if (!isPrePlan.value || !isDetailFieldEditable('oreType')) return formatDict(DICT.ORE_TYPE, row.oreType);
             return renderDetailFormItem(row, index, 'oreType', '矿石种类', () =>
                 h(NSelect, {
                     value: row.oreType,
@@ -1165,6 +1191,7 @@ const detailTableColumns = computed<any[]>(() => [
         isRule: true,
         width: 170,
         render(row: any, index: number) {
+            if (!isDetailFieldEditable('shipmentThreshold')) return row.shipmentThreshold ?? '--';
             return renderDetailFormItem(row, index, 'shipmentThreshold', '发货阈值（%）', () =>
                 h(NInputNumber, {
                     value: row.shipmentThreshold,
@@ -1187,6 +1214,7 @@ const detailTableColumns = computed<any[]>(() => [
         isRule: true,
         width: 160,
         render(row: any, index: number) {
+            if (!isDetailFieldEditable('placeFelivery')) return row.deliveryLocationName || '--';
             return renderDetailFormItem(row, index, 'placeFelivery', '交货地点', () =>
                 h(NSelect, {
                     value: row.placeFelivery,
@@ -1210,6 +1238,7 @@ const detailTableColumns = computed<any[]>(() => [
         isRule: true,
         width: 140,
         render(row: any, index: number) {
+            if (!isDetailFieldEditable('modeTransportation')) return formatDict(DICT.TRANSPORT_MODE, row.modeTransportation);
             return renderDetailFormItem(row, index, 'modeTransportation', '运输方式', () =>
                 h(NSelect, {
                     value: row.modeTransportation,
@@ -1230,6 +1259,12 @@ const detailTableColumns = computed<any[]>(() => [
         isRule: true,
         width: 180,
         render(row: any, index: number) {
+            if (!isDetailFieldEditable('deliveryMethods'))
+                return (
+                    (row.deliveryMethods || [])
+                        .map((val: any) => formatDict(DICT.DELIVERY_METHOD, val))
+                        .join('、') || '--'
+                );
             return renderDetailFormItem(row, index, 'deliveryMethods', '交割方式', () =>
                 h(NSelect, {
                     value: row.deliveryMethods,
@@ -1255,7 +1290,8 @@ const detailTableColumns = computed<any[]>(() => [
         title: () => (isPrePlan.value ? renderRequiredTitle('交货期限') : '交货期限'),
         width: 250,
         render(row: any, index: number) {
-            if (!isPrePlan.value) return row.deliveryDeadline || '--';
+            if (!isPrePlan.value || !isDetailFieldEditable('deliveryDateRange'))
+                return row.deliveryDeadline || '--';
             return renderDetailFormItem(row, index, 'deliveryDateRange', '交货期限', () =>
                 h(NDatePicker, {
                     formattedValue: row.deliveryDateRange,
@@ -1278,6 +1314,7 @@ const detailTableColumns = computed<any[]>(() => [
         title: '计划备注',
         width: 200,
         render(row: any) {
+            if (!isDetailFieldEditable('remark')) return row.remark || '--';
             return h(NInput, {
                 value: row.remark,
                 type: 'textarea',
@@ -1294,7 +1331,7 @@ const detailTableColumns = computed<any[]>(() => [
             });
         },
     },
-    ...(isPrePlan.value
+    ...(isPrePlan.value && !isPreExecutingEdit.value
         ? [
               {
                   key: 'actions',
@@ -1321,7 +1358,7 @@ const detailTableScrollX = computed(() => {
     return width > 856 ? width : 856;
 });
 /**
- * 编辑发运计划时获取详情并回填表单。
+ * 编辑发货订单时获取详情并回填表单。
  * @returns 无返回值
  */
 const getAllData = async () => {
@@ -1331,6 +1368,7 @@ const getAllData = async () => {
         if (res && res.code === 200) {
             const detailList = Array.isArray(res.data?.details) ? res.data.details : [];
             formData.id = res.data?.id || '';
+            formData.status = res.data?.status || '';
             formData.planType =
                 res.data?.planType || detailList[0]?.planType || DAILY_SHIPPING_PLAN_TYPE.CONTRACT;
             const detailContractCodes = detailList.map((item: any) => getContractCode(item));
@@ -1371,21 +1409,39 @@ const initializePage = async () => {
 };
 initializePage();
 /**
- * 执行已经确认的发运计划提交请求。
+ * 执行已经确认的发货订单提交请求。
  * @returns 无返回值
  */
-const executeSubmit = async () => {
+const executeSubmit = async (status: string = PLAN_STATUS_CONSTANT.EXECUTING) => {
     try {
         submitLoading.value = true;
-        const payload = buildSubmitPayload(PLAN_STATUS_CONSTANT.EXECUTING);
+        const payload = buildSubmitPayload(status);
         const res = route.query.id ? await updateDailyShippingPlanApi(payload) : await createDailyShippingPlanApi(payload);
         if (res?.code === 200) {
+            message.success(status === PLAN_STATUS_CONSTANT.DRAFT ? '保存成功，发货订单已存为草稿' : '提交成功');
             router.back();
         }
     } catch (error) {
         console.error('Failed to submit daily shipping plan:', error);
     } finally {
         submitLoading.value = false;
+    }
+};
+/**
+ * 保存发货订单为草稿（仅校验，不推送物流系统，提交后进入执行中）。
+ * @returns 无返回值
+ */
+const handleSave = async () => {
+    if (saveLoading.value || submitLoading.value || submitConfirming.value || detailLoading.value) return;
+    try {
+        const valid = await validateBeforeSubmit();
+        if (!valid) return;
+        saveLoading.value = true;
+        await executeSubmit(PLAN_STATUS_CONSTANT.DRAFT);
+    } catch (error) {
+        console.error('Failed to save daily shipping plan draft:', error);
+    } finally {
+        saveLoading.value = false;
     }
 };
 /**
@@ -1406,7 +1462,7 @@ const confirmSubmit = () =>
         });
     });
 /**
- * 校验并提交发运计划。
+ * 校验并提交发货订单。
  * @returns 无返回值
  */
 const handleSubmit = async () => {

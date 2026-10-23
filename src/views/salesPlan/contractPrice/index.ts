@@ -105,14 +105,15 @@ export default () => {
     const tableConfig = ref<any>({
         columns: [
             { key: 'contractPricingCode', title: '定价单号', width: 180 },
-            { key: 'planMonth', title: '发货月份', width: 120, render: (row: any) => formatMonth(row.planMonth) },
+            { key: 'customerName', title: '企业名称', width: 180, render: (row: any) => row.customerName || '--' },
+        { key: 'planMonth', title: '发货月份', width: 120, render: (row: any) => formatMonth(row.planMonth) },
             {
                 key: 'status',
                 title: '单据状态',
                 width: 130,
                 render: (row: any) => renderStatus(row.status),
             },
-            { key: 'customerName', title: '企业名称', width: 180, render: (row: any) => row.customerName || '--' },
+            
             { key: 'applicantName', title: '申请人', width: 120, render: (row: any) => row.applicantName || '--' },
             {
                 key: 'totalTaxAmount',

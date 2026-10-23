@@ -97,6 +97,7 @@ interface FormData {
     startDate: Nullable<string>;
     endDate: Nullable<string>;
     duration: Nullable<number>;
+    shipmentRemindThreshold: Nullable<number>; // 发货提醒阈值（0-100，默认 75）
     supplierUnit: Nullable<string | number>;
     directorId: Nullable<string | number>;
     directorName: string;
@@ -394,6 +395,7 @@ export default () => {
             startDate: null,
             endDate: null,
             duration: null,
+            shipmentRemindThreshold: 75, // 发货提醒阈值默认 75
             supplierUnit: getDictDefault(SALES_CONTRACT_DICT.SUPPLIER_UNIT, SALES_CONTRACT_DEFAULT_SUPPLIER_UNIT_VALUES),
             directorId: userId,
             directorName: username,
@@ -1017,6 +1019,7 @@ export default () => {
             endDate: detail.endDate ? formatDate(detail.endDate) : null,
             totalAmount: toNumberOrNull(detail.totalAmount),
             duration: toNumberOrNull(detail.duration),
+            shipmentRemindThreshold: toNumberOrNull(detail.shipmentRemindThreshold) ?? 75,
             ...(isEdit.value
                 ? {
                       directorId: directorPerson?.id,
@@ -1198,6 +1201,7 @@ export default () => {
             startDate: data.startDate || '',
             endDate: data.endDate || '',
             duration: data.duration,
+            shipmentRemindThreshold: data.shipmentRemindThreshold,
             pricingMethod: data.pricingMethod,
             contractName: data.contractName,
             supplierUnit: data.supplierUnit,

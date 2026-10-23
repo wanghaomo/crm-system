@@ -16,8 +16,13 @@ import { h, onMounted, ref } from 'vue';
 import { NSpace, useDialog } from 'naive-ui';
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
-import { getDailyShippingPlanDetailPageApi, updateDailyShippingPlanDetailStatusApi } from '@/api';
 import {
+    deleteDailyShippingPlanApi,
+    getDailyShippingPlanDetailPageApi,
+    updateDailyShippingPlanDetailStatusApi,
+} from '@/api';
+import {
+    DAILY_SHIPPING_PLAN_TYPE,
     dailyShippingPlanTypeOptions,
     getDailyShippingPlanTypeLabel,
     PLAN_STATUS_CONSTANT,
@@ -169,7 +174,7 @@ const queryConfiguration = ref([
 
 // 明细状态操作配置，沿用详情页的状态值和确认文案。
 const detailStatusActionMap = {
-    suspend: { status: 1, title: '确认挂起订单', content: '确定要挂起该订单吗？', successMessage: '挂起成功' },
+    suspend: { status: 1, title: '确认暂缓发货', content: '确定要暂缓该订单发货吗？', successMessage: '暂缓发货成功' },
     close: { status: 2, title: '确认关闭订单', content: '确定要关闭该订单吗？', successMessage: '关闭成功' },
     recover: { status: 3, title: '确认恢复订单', content: '确定要恢复该订单吗？', successMessage: '恢复成功' },
 };
@@ -216,6 +221,30 @@ const handleDetailOrderAction = (row: any, action: keyof typeof detailStatusActi
 };
 
 /**
+ * 删除草稿状态的发货订单。
+ * @param row 当前发货订单行
+ * @returns 无返回值
+ */
+const handleDeleteOrder = (row: any) => {
+    dialog.warning({
+        title: '删除确认',
+        content: '删除后该草稿订单将不可恢复，是否确认删除？',
+        positiveText: '确定',
+        negativeText: '取消',
+        onPositiveClick: async () => {
+            try {
+                const res = await deleteDailyShippingPlanApi(row.id);
+                if (res?.code === 200) {
+                    await getList();
+                }
+            } catch (error) {
+                console.error('Failed to delete daily shipping plan:', error);
+            }
+        },
+    });
+};
+
+/**
  * 打开发货计划明细的运输情况。
  * @param row 当前发货计划明细
  * @returns 无返回值
@@ -234,12 +263,27 @@ const tableConfig = ref<any>({
             width: 160,
             render: (row: any) => formatValue(row.salesContractCode),
         },
+        
+        {
+            key: 'customerName',
+            title: '客户名称',
+            width: 200,
+            render: (row: any) => formatValue(row.customerName),
+        },
         {
             key: 'planType',
             title: '发货类型',
             width: 120,
             render: (row: any) => getDailyShippingPlanTypeLabel(row.planType),
         },
+        {
+            key: 'contractNum',
+            title: '合同数量（吨）',
+            width: 140,
+            render: (row: any) => formatValue(row.contractNum),
+        },
+        
+        
         {
             key: 'deliveryOrderCode',
             title: '发货订单号',
@@ -270,12 +314,7 @@ const tableConfig = ref<any>({
             width: 120,
             render: (row: any) => formatDict(DICT.MINERAL_TYPE, row.mineralType),
         },
-        {
-            key: 'contractNum',
-            title: '合同数量（吨）',
-            width: 140,
-            render: (row: any) => formatValue(row.contractNum),
-        },
+        
         {
             key: 'actualQuantity',
             title: '已发货数量（吨）',
@@ -324,12 +363,7 @@ const tableConfig = ref<any>({
             width: 140,
             render: (row: any) => formatDict(DICT.SUPPLIER_UNIT, row.supplierUnit),
         },
-        {
-            key: 'customerName',
-            title: '客户名称',
-            width: 200,
-            render: (row: any) => formatValue(row.customerName),
-        },
+        
         {
             key: 'subsidiaryName',
             title: '子公司贸易商',
@@ -346,7 +380,19 @@ const tableConfig = ref<any>({
     tableList: [],
     tableBtns: [
         {
-            btnName: '挂起订单',
+            btnName: '编辑',
+            btnColor: 'var(--web-success-tag-c)',
+            // 草稿状态或预发货订单可编辑（isBtnHide 返回 true 表示保留）
+            isBtnHide: (row: any) =>
+                (row.status === PLAN_STATUS_CONSTANT.DRAFT ||
+                    row.planType === DAILY_SHIPPING_PLAN_TYPE.PRE) &&
+                checkPermission(['crm:daily_shipping_plan:create']),
+            clickTableBtns: (row: any) => {
+                router.push({ path: '/shippingManage/dailyShippingPlan/create', query: { id: row.id } });
+            },
+        },
+        {
+            btnName: '暂缓发货',
             btnColor: 'var(--base-color)',
             isBtnHide: (row: any) => row.status === PLAN_STATUS_CONSTANT.EXECUTING && checkPermission(['crm:daily_shipping_plan:hang']),
             clickTableBtns: (row: any) => handleDetailOrderAction(row, 'suspend'),
@@ -363,6 +409,14 @@ const tableConfig = ref<any>({
             isBtnHide: (row: any) =>
                 [PLAN_STATUS_CONSTANT.EXECUTING, PLAN_STATUS_CONSTANT.TERMINATED].includes(row.status) && checkPermission(['crm:daily_shipping_plan:close']),
             clickTableBtns: (row: any) => handleDetailOrderAction(row, 'close'),
+        },
+        {
+            btnName: '删除',
+            btnColor: 'var(--web-error-tag-c)',
+            // 仅草稿状态且具备删除权限时显示（isBtnHide 返回 true 表示保留）
+            isBtnHide: (row: any) =>
+                row.status === PLAN_STATUS_CONSTANT.DRAFT && checkPermission(['crm:daily_shipping_plan:delete']),
+            clickTableBtns: (row: any) => handleDeleteOrder(row),
         },
         {
             btnName: '运输情况',

@@ -178,8 +178,9 @@ export default () => {
         isShowIndex: true,
         columns: [
             { key: 'contractCode', title: '合同编号', width: 170, render: (row: any) => renderText(row.contractCode) },
-            { key: 'supplierUnit', title: '供方单位', width: 210, render: (row: any) => getDictLabel(SALES_CONTRACT_DICT.SUPPLIER_UNIT, row.supplierUnit) },
             { key: 'customerName', title: '需方单位', width: 210, render: (row: any) => renderText(row.customerName) },
+        { key: 'supplierUnit', title: '供方单位', width: 210, render: (row: any) => getDictLabel(SALES_CONTRACT_DICT.SUPPLIER_UNIT, row.supplierUnit) },
+            
             { key: 'subsidiaryName', title: '子公司贸易商', width: 210, render: (row: any) => renderText(row.subsidiaryName) },
             {
                 key: 'status',

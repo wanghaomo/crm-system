@@ -62,7 +62,7 @@ import { useDictStore } from '@/store/commStore';
 const detailData = ref<any>({});
 const currentColor = ref<any>({});
 const { dictMap } = storeToRefs(useDictStore());
-// 发运计划明细使用的业务字典名称。
+// 发货订单明细使用的业务字典名称。
 const DICT = {
     SUPPLIER_UNIT: '供方单位',
     ORE_TYPE: '矿种',
@@ -106,7 +106,7 @@ const formatDeliveryMethods = (value: any) => {
         .join('、') || '--';
 };
 /**
- * 格式化发运计划明细状态。
+ * 格式化发货订单明细状态。
  * @param value 状态编码
  * @returns 状态展示文案
  */
@@ -130,7 +130,7 @@ const route = useRoute();
 const planRecord = ref([]);
 const loading = ref(false);
 /**
- * 获取发运计划详情。
+ * 获取发货订单详情。
  * @returns 无返回值，结果写入主表详情和明细列表
  */
 const getDetaily = async () => {

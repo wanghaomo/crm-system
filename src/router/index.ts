@@ -55,6 +55,43 @@ const constantRoutes = [
             nologin: true,
         },
     },
+    // 竞争对手
+    {
+        path: formatPath('/customerManage/competitor/add'),
+        name: 'crm:competitor_manage:create',
+        component: () => import('@/views/customerManage/competitor/create.vue'),
+        meta: {
+            title: '新增竞争对手',
+            nologin: false,
+            layout: 'main-layout',
+            code: 'crm:competitor_manage:create',
+            parentCode: 'crm:competitor_manage',
+        },
+    },
+    {
+        path: formatPath('/customerManage/competitor/edit'),
+        name: 'crm:competitor_manage:edit',
+        component: () => import('@/views/customerManage/competitor/create.vue'),
+        meta: {
+            title: '编辑竞争对手',
+            nologin: false,
+            layout: 'main-layout',
+            code: 'crm:competitor_manage:edit',
+            parentCode: 'crm:competitor_manage',
+        },
+    },
+    {
+        path: formatPath('/customerManage/competitor/detail'),
+        name: 'crm:competitor_manage:detail',
+        component: () => import('@/views/customerManage/competitor/detail.vue'),
+        meta: {
+            title: '竞争对手详情',
+            nologin: false,
+            layout: 'main-layout',
+            code: 'crm:competitor_manage:detail',
+            parentCode: 'crm:competitor_manage',
+        },
+    },
     // 客户档案
     {
         path: formatPath('/customerManage/customerArchive/add'),
@@ -700,14 +737,14 @@ const constantRoutes = [
             parentCode: 'crm:monthly_shipping_plan',
         },
     },
-    //发运计划
+    //发货订单
     
     {
         path: formatPath('/shippingManage/dailyShippingPlan/create'),
         name: 'crm:daily_shipping_plan:create',
         component: () => import('@/views/shippingManage/dailyShippingPlan/create.vue'),
         meta: {
-            title: '新增发运计划',
+            title: '新增发货订单',
             nologin: false,
             layout: 'main-layout',
             code: 'crm:daily_shipping_plan:create',
@@ -720,7 +757,7 @@ const constantRoutes = [
         name: 'crm:daily_shipping_plan:edit',
         component: () => import('@/views/shippingManage/dailyShippingPlan/create.vue'),
         meta: {
-            title: '编辑发运计划',
+            title: '编辑发货订单',
             nologin: false,
             layout: 'main-layout',
             code: 'crm:daily_shipping_plan:edit',
@@ -773,6 +810,18 @@ const constantRoutes = [
             nologin: false,
             layout: 'main-layout',
             code: 'crm:dashboard:index',
+        },
+    },
+    //供需数据地图
+    {
+        path: formatPath('/supplyDemandMap/index'),
+        name: 'crm:supply_demand_map:view',
+        component: () => import('@/views/supplyDemandMap/index.vue'),
+        meta: {
+            title: '供需数据地图',
+            nologin: true,
+            layout: 'main-layout',
+            code: 'crm:supply_demand_map:view',
         },
     },
 ];

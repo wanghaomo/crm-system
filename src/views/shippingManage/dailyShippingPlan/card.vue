@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-// App 端发运计划通用分组卡片，仅负责标题和内容插槽布局。
+// App 端发货订单通用分组卡片，仅负责标题和内容插槽布局。
 defineProps({
     title: {
         type: String,

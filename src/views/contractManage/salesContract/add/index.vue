@@ -94,6 +94,19 @@
                                 </n-form-item>
                             </n-grid-item>
                             <n-grid-item>
+                                <n-form-item label="发货提醒阈值" path="shipmentRemindThreshold">
+                                    <!-- 数字输入：0-100 的整数，默认 75 -->
+                                    <n-input-number
+                                        v-model:value="formData.shipmentRemindThreshold"
+                                        :min="0"
+                                        :max="100"
+                                        :precision="0"
+                                        placeholder="请输入">
+                                        <template #suffix>%</template>
+                                    </n-input-number>
+                                </n-form-item>
+                            </n-grid-item>
+                            <n-grid-item>
                                 <n-form-item label="结算方式" path="paymentMethod">
                                     <MxDict
                                         placeholder="请选择"

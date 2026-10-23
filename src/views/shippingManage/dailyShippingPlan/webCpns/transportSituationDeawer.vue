@@ -355,7 +355,7 @@ const formatOrderStatus = (item: any = {}) => {
 };
 /**
  * 打开运输情况抽屉，并初始化左侧运输订单列表。
- * @param data 发运计划明细数据
+ * @param data 发货订单明细数据
  * @returns 无返回值
  */
 const showDrawer = async (data?: any) => {

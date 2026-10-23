@@ -1,5 +1,6 @@
-// 发运计划主单和明细共用状态常量。
+// 发货订单主单和明细共用状态常量。
 export const PLAN_STATUS_CONSTANT = {
+  DRAFT: 'DRAFT', // 草稿（保存后未提交）
   PENDING: 'PENDING', // 待执行
   EXECUTING: 'EXECUTING', // 执行中
   COMPLETED: 'COMPLETED', // 已完成
@@ -31,6 +32,7 @@ export const getDailyShippingPlanTypeLabel = (value: unknown) => {
 };
 // 状态展示配置，列表、详情和 App 标签统一从这里取颜色和文案。
 export const planStatusMap = {
+  [PLAN_STATUS_CONSTANT.DRAFT]: { label: "草稿", iconColor: '#8C8C8C', textColor: '#666666', borderColor: '#E0E0E6', backgroundColor: '#F5F5F7' },
   [PLAN_STATUS_CONSTANT.PENDING]: { label: "待执行", iconColor: '#FCBD12', textColor: '#E59222', borderColor: '#FFE49A', backgroundColor: '#FFF1D9' },
   [PLAN_STATUS_CONSTANT.EXECUTING]: { label: "执行中", iconColor: '#0192FF', textColor: '#3370EB', borderColor: '#D9E3F5', backgroundColor: '#EFF4FF' },
   [PLAN_STATUS_CONSTANT.COMPLETED]: { label: "已完成", iconColor: "#18D851", textColor: "#5AA771", borderColor: '#E2F4D8', backgroundColor: '#F0F9EB' },

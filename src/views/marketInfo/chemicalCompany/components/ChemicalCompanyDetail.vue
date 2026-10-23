@@ -13,13 +13,6 @@
                         <span class="info-value">{{ detailData.inputPerson || '--' }}</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label">区域</span>
-                        <span class="info-value">
-                            <MxDict v-if="detailData.region" :model-value="detailData.region" dict-type="区域类型" text />
-                            <span v-else>--</span>
-                        </span>
-                    </div>
-                    <div class="info-item">
                         <span class="info-label">录入时间</span>
                         <span class="info-value">{{ detailData.inputTime || '--' }}</span>
                     </div>
@@ -32,15 +25,6 @@
                 <n-descriptions label-placement="left" :column="2" :separator="false" class="detail-descriptions chemical-detail-descriptions">
                     <n-descriptions-item label="调研月份">
                         {{ formatSurveyMonth(detailData.surveyMonth) }}
-                    </n-descriptions-item>
-                    <n-descriptions-item label="详细地址">
-                        {{ detailData.detailAddress || '--' }}
-                    </n-descriptions-item>
-                    <n-descriptions-item label="联系人">
-                        {{ detailData.contactPerson || '--' }}
-                    </n-descriptions-item>
-                    <n-descriptions-item label="联系电话">
-                        {{ detailData.contactPhone || '--' }}
                     </n-descriptions-item>
                     <n-descriptions-item label="库存情况(万吨)">
                         {{ formatNumber(detailData.inventory, 1) }}

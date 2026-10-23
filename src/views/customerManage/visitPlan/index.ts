@@ -81,10 +81,10 @@ export default () => {
         columns: [
             { title: '企业单位名称', key: 'customerName', width: 150 },
             {
-                title: '客户星级',
-                key: 'starLevel',
+                title: '拜访方式',
+                key: 'visitMode',
                 width: 100,
-                render: (row: any) => starLevelMap[row.starLevel] || row.starLevel || '--',
+                render: (row: any) => row.visitMode || '--',
             },
             {
                 title: '单据状态',
@@ -125,11 +125,10 @@ export default () => {
                 render: (row: any) => row.executorList.map((executor: any) => executor.username).join('、') || '--',
             },
             {
-                title: '客户对接人',
-                key: 'contactPersonList',
-                width: 120,
-                render: (row: any) =>
-                    row.contactPersonList.map((contactPerson: any) => contactPerson.label).join('、') || '--',
+                title: '关键决策人',
+                key: 'keyDecisionMakers',
+                width: 160,
+                render: (row: any) => row.keyDecisionMakers || '--',
             },
             { title: '拜访要求', key: 'visitRequirements', width: 120, render: (row: any) => row.visitRequirements || '--' },
             { title: '实际拜访时间', key: 'actualTime', width: 140, render: (row: any) => row.actualTime || '--' },
@@ -144,6 +143,14 @@ export default () => {
                 isBtnHide: (row: any) => ['COMPLETED', 'PENDING'].includes(row.status) && checkPermission(["crm:visit_plan:edit"]), // 待拜访、已拜访
                 clickTableBtns: (row: any) => {
                     router.push({ path: '/customerManage/visitPlan/edit', query: { id: row.id } });
+                },
+            },
+            {
+                btnName: '复制',
+                btnColor: 'var(--base-color)',
+                isBtnHide: () => checkPermission(['crm:visit_plan:create']), // 有新增权限时显示（MxWebDataTable 中该回调返回 true 为保留）
+                clickTableBtns: (row: any) => {
+                    router.push({ path: '/customerManage/visitPlan/add', query: { copyId: row.id } });
                 },
             },
             {

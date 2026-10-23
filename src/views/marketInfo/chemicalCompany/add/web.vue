@@ -15,28 +15,8 @@
                             </n-form-item>
                         </n-grid-item>
                         <n-grid-item>
-                            <n-form-item label="区域" path="region">
-                                <MxDict placeholder="请选择" dictType="区域类型" v-model="formData.region"></MxDict>
-                            </n-form-item>
-                        </n-grid-item>
-                        <n-grid-item>
                             <n-form-item label="调研月份" path="surveyMonth">
                                 <n-date-picker v-model:formatted-value="formData.surveyMonth" value-format="yyyy-MM" type="month" placeholder="请选择" style="width: 100%" />
-                            </n-form-item>
-                        </n-grid-item>
-                        <n-grid-item>
-                            <n-form-item label="详细地址" path="detailAddress">
-                                <n-input v-model:value="formData.detailAddress" placeholder="请输入" :maxlength="100" clearable />
-                            </n-form-item>
-                        </n-grid-item>
-                        <n-grid-item>
-                            <n-form-item label="联系人" path="contactPerson">
-                                <n-input v-model:value="formData.contactPerson" placeholder="请输入" :maxlength="100" clearable />
-                            </n-form-item>
-                        </n-grid-item>
-                        <n-grid-item>
-                            <n-form-item label="联系电话" path="contactPhone">
-                                <n-input v-model:value="formData.contactPhone" placeholder="请输入" :maxlength="11" clearable />
                             </n-form-item>
                         </n-grid-item>
                         <n-grid-item>
@@ -198,11 +178,7 @@ interface ChemicalSurveyForm {
     id?: string;
     enterpriseName: string;  // 企业名称
     customerId?: string | null;  // 企业id
-    region: string | null;  // 区域
     surveyMonth: string | null; // 调研月份
-    detailAddress: string; // 详细地址
-    contactPerson: string;  // 联系人
-    contactPhone: string;  // 联系电话
     inventory: string; // 库存（保留1位小数）
     operatingRate: string; // 开工率（整数）
     rateChangeReason: string;  // 开工率变化原因
@@ -217,11 +193,7 @@ interface ChemicalSurveyForm {
 const createEmptyForm = (): ChemicalSurveyForm => ({
     enterpriseName: '',
     customerId: null,
-    region: null,
     surveyMonth: null,
-    detailAddress: '',
-    contactPerson: '',
-    contactPhone: '',
     inventory: '',
     operatingRate: '',
     rateChangeReason: '',
@@ -317,11 +289,7 @@ const normalizeDetailToForm = (data: any, copy = false): ChemicalSurveyForm => (
     id: copy ? undefined : getValue(data, ['id']),
     enterpriseName: getValue(data, ['enterpriseName', 'customerName']),
     customerId: getValue(data, ['customerId'], null),
-    region: getValue(data, ['region'], null),
     surveyMonth: getValue(data, ['surveyMonth', 'researchMonth'], null),
-    detailAddress: getValue(data, ['detailAddress', 'address']),
-    contactPerson: getValue(data, ['contactPerson']),
-    contactPhone: getValue(data, ['contactPhone']),
     inventory: getValue(data, ['inventory'], '')?.toString() || '',
     operatingRate: getValue(data, ['operatingRate'], '')?.toString() || '',
     rateChangeReason: getValue(data, ['rateChangeReason', 'operatingRateReason']),
@@ -353,7 +321,6 @@ const buildSubmitPayload = (status: 'DRAFT' | 'ARCHIVED') => {
 
 const rules = {
     enterpriseName: { required: true, message: '请选择企业', trigger: 'change', saveOnly: true },
-    region: { required: true, message: '请选择区域', trigger: 'change' },
     surveyMonth: { required: true, message: '请选择调研月份', trigger: 'change', saveOnly: true },
     inventory: {
         required: true,

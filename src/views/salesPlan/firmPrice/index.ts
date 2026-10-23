@@ -76,14 +76,15 @@ export default () => {
     const tableConfig = ref<any>({
         columns: [
             { key: 'pricingCode', title: '基准定价单号', width: 200 },
-            { key: 'pricingMonth', title: '定价月份', width: 200 },
+            { key: 'customerName', title: '企业名称', width: 200 },
+        { key: 'pricingMonth', title: '定价月份', width: 200 },
             {
                 key: 'status',
                 title: '单据状态',
                 width: 200,
                 render: (row: any) => renderStatus(row.status),
             },
-            { key: 'customerName', title: '企业名称', width: 200 },
+            
             { key: 'applicantName', title: '申请人', width: 200, render: (row: any) => row.applicantName || '--' },
             { key: 'instruction', title: '事项说明', width: 200, render: (row: any) => row.instruction || '--' },
             {

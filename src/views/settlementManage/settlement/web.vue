@@ -87,15 +87,16 @@ const tableConfig = ref<any>({
             width: 160,
         },
         {
-            key: 'contractCode',
-            title: '合同编号',
-            width: 160,
-        },
-        {
             key: 'customerName',
             title: '企业名称',
             width: 200,
         },
+        {
+            key: 'contractCode',
+            title: '合同编号',
+            width: 160,
+        },
+        
         {
             key: 'applyUnit',
             title: '申请单位',

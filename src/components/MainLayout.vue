@@ -10,37 +10,38 @@
         </div>
     </template>
     <template v-else>
-        <!-- <MxHeader v-if="showHeader"></MxHeader> -->
-        <n-layout has-sider>
-            <n-layout-sider
-                class="menu-sider"
-                bordered
-                show-trigger
-                collapse-mode="width"
-                :collapsed-width="64"
-                :width="240"
-                :native-scrollbar="false"
-                :inverted="inverted"
-                :style="`height: calc(100vh - ${56}px);`">
-                <n-menu
-                    :inverted="inverted"
+        <div class="layout-wrapper">
+            <MxHeader :pathNameArray="pathNameArray"></MxHeader>
+            <n-layout has-sider class="layout-body">
+                <n-layout-sider
+                    class="menu-sider"
+                    bordered
+                    show-trigger
+                    collapse-mode="width"
                     :collapsed-width="64"
-                    :collapsed-icon-size="22"
-                    :value="selectedMenu"
-                    :options="menuOptions"
-                    :expanded-keys="expandedMenuKeys"
-                    @update:value="handleMenuSelect"
-                    @update:expanded-keys="handleMenuExpand" 
-                     />
-            </n-layout-sider>
-            <n-layout-content class="scrollable-content" :style="`height: calc(100vh - ${56}px);`">
-                <div class="page-main">
-                    <div class="page-main__content">
-                        <router-view></router-view>
+                    :width="240"
+                    :native-scrollbar="false"
+                    :inverted="inverted">
+                    <n-menu
+                        :inverted="inverted"
+                        :collapsed-width="64"
+                        :collapsed-icon-size="22"
+                        :value="selectedMenu"
+                        :options="menuOptions"
+                        :expanded-keys="expandedMenuKeys"
+                        @update:value="handleMenuSelect"
+                        @update:expanded-keys="handleMenuExpand" 
+                         />
+                </n-layout-sider>
+                <n-layout-content class="scrollable-content">
+                    <div class="page-main">
+                        <div class="page-main__content">
+                            <router-view></router-view>
+                        </div>
                     </div>
-                </div>
-            </n-layout-content>
-        </n-layout>
+                </n-layout-content>
+            </n-layout>
+        </div>
     </template>
 </template>
 <script lang="ts" setup>
@@ -57,6 +58,7 @@ const { fullMenuTree, routerArray } = storeToRefs(useRouteStore());
 import { MxFeedback } from '@mx/mx-ui';
 import { useUserStore } from '@/store/userStore';
 import { useRoute } from 'vue-router';
+import MxHeader from './Header/index.vue';
 const { userInfo } = storeToRefs(useUserStore());
 const menuOptions = ref<any[]>([]);
 const inverted = ref(false);
@@ -222,6 +224,18 @@ const handleMenuSelect = (key: string, item: MenuItem) => {
 };
 </script>
 <style lang="postcss" scoped>
+.layout-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.layout-body {
+    flex: 1;
+    min-height: 0;
+}
+
 .menu-sider {
     :deep(.n-submenu-children .n-menu-item-content) {
         padding-left: 72px !important;

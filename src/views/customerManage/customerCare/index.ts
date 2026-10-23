@@ -158,6 +158,14 @@ export default () => {
                 },
             },
             {
+                btnName: '复制',
+                btnColor: 'var(--base-color)',
+                isBtnHide: () => checkPermission(['crm:customer_car:create']), // 有新增权限时显示（MxWebDataTable 中该回调返回 true 为保留）
+                clickTableBtns: (row: any) => {
+                    router.push({ path: '/customerManage/customerCare/add', query: { copyId: row.id } });
+                },
+            },
+            {
                 btnName: '取消',
                 btnColor: 'var(--web-error-tag-c)',
                 isBtnHide: (row: any) => row.status === 'PENDING' && checkPermission(['crm:customer_car:cancel']),

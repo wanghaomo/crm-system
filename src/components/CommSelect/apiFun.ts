@@ -48,6 +48,9 @@ export const initData = async (
                 baseParams = {
                     cooperationStatus: 'NORMAL',
                     status: 'STORAGE', // 企业客户状态-已入库
+                    // 仅合作客户可在内部业务流程（拜访计划/来访记录/发货订单/合同等）中被选择；
+                    // 竞争对手调研、化工企业调研场景可通过 extraParams 传 { isCooperationCustomer: undefined } 返回全部客户。
+                    isCooperationCustomer: 'YES',
                 };
                 webShowFields = [
                     {

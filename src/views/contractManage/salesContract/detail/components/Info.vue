@@ -26,6 +26,9 @@
             <n-descriptions-item label="结算方式">
                 {{ formatDict(DICT.PAYMENT_METHOD, detail.paymentMethod) }}
             </n-descriptions-item>
+            <n-descriptions-item label="发货提醒阈值">
+                {{ detail.shipmentRemindThreshold != null ? detail.shipmentRemindThreshold + '%' : '--' }}
+            </n-descriptions-item>
             <n-descriptions-item label="付款条件" :span="2">
                 {{ detail.paymentTerms || '--' }}
             </n-descriptions-item>

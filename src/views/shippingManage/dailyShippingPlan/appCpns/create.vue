@@ -325,7 +325,7 @@ const yardOptions = ref<Array<{ label: string; value: string }>>([]);
 
 const pageTitle = computed(() => (route.query.id ? '编辑发货订单' : '新增发货订单'));
 const isEditMode = computed(() => Boolean(route.query.id));
-// 发运计划明细使用的业务字典名称。
+// 发货订单明细使用的业务字典名称。
 const DICT = {
     SUPPLIER_UNIT: '供方单位',
     ORE_TYPE: '矿种',
@@ -1150,7 +1150,7 @@ const validateContractDetailSelection = (checkedDetails: any[]) => {
 };
 
 /**
- * 构建发运计划新增或编辑提交参数。
+ * 构建发货订单新增或编辑提交参数。
  * @param status 主单目标状态
  * @returns 后端接口需要的主表和明细参数
  */
@@ -1236,7 +1236,7 @@ const validateBeforeSubmit = async () => {
     return true;
 };
 /**
- * 编辑发运计划时获取详情并回填表单。
+ * 编辑发货订单时获取详情并回填表单。
  * @returns 无返回值
  */
 const getDetaily = async () => {
@@ -1273,7 +1273,7 @@ const getDetaily = async () => {
 };
 
 /**
- * 执行已经确认的发运计划提交请求。
+ * 执行已经确认的发货订单提交请求。
  * @returns 无返回值
  */
 const executeSubmit = async () => {
@@ -1285,13 +1285,13 @@ const executeSubmit = async () => {
             router.back();
         }
     } catch (error) {
-        console.error('提交发运计划失败', error);
+        console.error('提交发货订单失败', error);
     } finally {
         submitLoading.value = false;
     }
 };
 /**
- * 校验并提交发运计划。
+ * 校验并提交发货订单。
  * @returns 无返回值
  */
 const handleSubmit = async () => {

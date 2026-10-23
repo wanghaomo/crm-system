@@ -18,6 +18,38 @@
                 </div>
                 <div class="info-row">
                     <div class="info-cell">
+                        <span class="cell-label">地址</span>
+                        <span class="cell-value">{{ detailData.addressRegion || "--" }}</span>
+                    </div>
+                    <div class="info-cell">
+                        <span class="cell-label">详细地址</span>
+                        <span class="cell-value">{{ detailData.detailAddress || "--" }}</span>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <div class="info-cell">
+                        <span class="cell-label">经度</span>
+                        <span class="cell-value">{{ detailData.longitude ?? "--" }}</span>
+                    </div>
+                    <div class="info-cell">
+                        <span class="cell-label">纬度</span>
+                        <span class="cell-value">{{ detailData.latitude ?? "--" }}</span>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <div class="info-cell">
+                        <span class="cell-label">是否合作客户</span>
+                        <span class="cell-value">{{
+                            detailData.isCooperationCustomer === "NO" ? "否" : "是"
+                        }}</span>
+                    </div>
+                    <div class="info-cell">
+                        <span class="cell-label"></span>
+                        <span class="cell-value"></span>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <div class="info-cell">
                         <span class="cell-label">合作状态</span>
                         <span class="cell-value">
                             <template v-if="detailData.status === 'STORAGE' && detailData.cooperationStatus">
@@ -112,7 +144,7 @@
 
         <!-- 客户评估 -->
         <div
-            v-if="detailData.customerType === 'CHEMICAL'"
+            v-if="detailData.customerType === 'CHEMICAL' && detailData.isCooperationCustomer !== 'NO'"
             class="detail-section customer-evaluation-section">
             <div class="section-title">
                 <span class="title-line"></span>

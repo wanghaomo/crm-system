@@ -10,38 +10,18 @@
                 <n-form ref="formRef" :model="formData" :rules="rules" require-mark-placement="left" label-placement="left" label-align="right" label-width="120px">
                     <n-grid :cols="2" :x-gap="24" :y-gap="0">
                         <n-grid-item>
-                            <n-form-item label="竞争对手名称" path="competitorName">
-                                <n-input v-model:value="formData.competitorName" placeholder="请填写竞争矿山全称" :maxlength="30" show-count clearable />
-                            </n-form-item>
-                        </n-grid-item>
-                        <n-grid-item>
-                            <n-form-item label="区域" path="region">
-                                <MxDict placeholder="请选择" dictType="区域类型" v-model="formData.region"></MxDict>
-                            </n-form-item>
-                        </n-grid-item>
-                        <n-grid-item>
-                            <n-form-item label="矿山类型" path="mineType">
-                                <MxDict placeholder="请选择" dictType="矿山类型" v-model="formData.mineType"></MxDict>
+                            <n-form-item label="企业名称" path="competitorName">
+                                <n-select
+                                    v-model:value="formData.competitorName"
+                                    :options="competitorOptions"
+                                    filterable
+                                    placeholder="请选择企业名称（已入库竞争对手）"
+                                    clearable />
                             </n-form-item>
                         </n-grid-item>
                         <n-grid-item>
                             <n-form-item label="调研月份" path="surveyMonth">
                                 <n-date-picker v-model:formatted-value="formData.surveyMonth" value-format="yyyy-MM" type="month" placeholder="请选择" style="width: 100%" />
-                            </n-form-item>
-                        </n-grid-item>
-                        <n-grid-item>
-                            <n-form-item label="详细地址" path="detailAddress">
-                                <n-input v-model:value="formData.detailAddress" placeholder="请输入" :maxlength="100" clearable show-count />
-                            </n-form-item>
-                        </n-grid-item>
-                        <n-grid-item>
-                            <n-form-item label="联系人" path="contactPerson">
-                                <n-input v-model:value="formData.contactPerson" placeholder="请输入" :maxlength="50" clearable />
-                            </n-form-item>
-                        </n-grid-item>
-                        <n-grid-item>
-                            <n-form-item label="联系电话" path="contactPhone">
-                                <n-input v-model:value="formData.contactPhone" placeholder="请输入" :maxlength="11" clearable @update:value="handlePhoneInput" />
                             </n-form-item>
                         </n-grid-item>
                         <n-grid-item>
@@ -97,6 +77,29 @@
                         <n-grid-item :span="2">
                             <n-form-item label="销售渠道" path="salesChannel">
                                 <n-input v-model:value="formData.salesChannel" placeholder="请输入" :maxlength="200" clearable />
+                            </n-form-item>
+                        </n-grid-item>
+                        <n-grid-item :span="2">
+                            <n-form-item label="矿石供给" path="oreSupplyList">
+                                <div class="ore-supply-box">
+                                    <div v-for="(item, idx) in formData.oreSupplyList" :key="idx" class="ore-supply-row">
+                                        <n-select
+                                            v-model:value="item.customerName"
+                                            :options="customerOptions"
+                                            filterable
+                                            placeholder="请选择客户名称"
+                                            style="flex: 1" />
+                                        <n-input-number
+                                            v-model:value="item.quantity"
+                                            :precision="1"
+                                            :min="0"
+                                            :show-button="false"
+                                            placeholder="数量（万吨）"
+                                            style="flex: 1" />
+                                        <n-button text type="error" @click="removeOreSupply(idx)">删除</n-button>
+                                    </div>
+                                    <n-button dashed size="small" @click="addOreSupply">+ 增加</n-button>
+                                </div>
                             </n-form-item>
                         </n-grid-item>
                     </n-grid>
@@ -168,6 +171,9 @@ import {
     NForm,
     NFormItem,
     NInput,
+    NInputNumber,
+    NSelect,
+    NButton,
     NDatePicker,
     NGrid,
     NGridItem,
@@ -180,6 +186,8 @@ import {
     queryCompetitorDetailApi,
     compareCompetitorWithHistoryApi,
 } from '@/api/competitor';
+import { queryCompetitorBaseListApi } from '@/api/competitorBase';
+import { getCustomerBasePageApi } from '@/api/customerManage';
 
 // ==================== 路由和UI工具实例 ====================
 /** 路由实例 */
@@ -220,16 +228,17 @@ interface HistoryDifferenceItem {
     diff: string;       // 差异百分比
 }
 
+/** 矿石供给行结构 */
+interface OreSupplyItem {
+    customerName: string | null;              // 客户名称（客户档案已入库企业）
+    quantity: number | null;                  // 数量（万吨）
+}
+
 /** 竞争对手调研表单数据结构 */
 interface CompetitorSurveyForm {
     id?: string;                              // 记录ID（编辑时使用）
-    competitorName: string;                   // 竞争对手名称
-    region: string | null;                    // 区域
-    mineType: string | null;                  // 矿山类型
+    competitorName: string;                   // 企业名称（竞争对手档案库已入库企业）
     surveyMonth: string | null;               // 调研月份（格式：yyyy-MM）
-    detailAddress: string;                    // 详细地址
-    contactPerson: string;                    // 联系人
-    contactPhone: string;                     // 联系电话
     inventory: string;                        // 矿石库存（万吨）
     operatingRate: string;                    // 开工率（%）
     rateChangeReason: string;                 // 开工率变化原因
@@ -241,6 +250,7 @@ interface CompetitorSurveyForm {
     salesPrice: string;                       // 销售价格（元/吨）
     salesChannel: string;                     // 销售渠道
     priceChangeReason: string;                // 价格变动原因
+    oreSupplyList: OreSupplyItem[];           // 矿石供给列表（不必填，行内必填）
     status: string;                           // 状态（DRAFT:草稿, ARCHIVED:已归档）
 }
 
@@ -263,12 +273,7 @@ interface ComparePayload {
  */
 const createEmptyForm = (): CompetitorSurveyForm => ({
     competitorName: '',
-    region: null,
-    mineType: null,
     surveyMonth: null,
-    detailAddress: '',
-    contactPerson: '',
-    contactPhone: '',
     inventory: '',
     operatingRate: '',
     rateChangeReason: '',
@@ -280,11 +285,85 @@ const createEmptyForm = (): CompetitorSurveyForm => ({
     salesPrice: '',
     salesChannel: '',
     priceChangeReason: '',
+    oreSupplyList: [],
     status: '',
 });
 
 /** 响应式表单数据 */
 const formData = ref<CompetitorSurveyForm>(createEmptyForm());
+
+// ==================== 下拉数据源 ====================
+/** 企业名称下拉（竞争对手档案库已入库） */
+const competitorOptions = ref<{ label: string; value: string }[]>([]);
+/** 客户名称下拉（客户档案库已入库） */
+const customerOptions = ref<{ label: string; value: string }[]>([]);
+
+/**
+ * 加载企业名称下拉（竞争对手档案库已入库）。
+ * @returns 无返回值
+ */
+const loadCompetitorOptions = async () => {
+    try {
+        const res: any = await queryCompetitorBaseListApi({ current: 1, size: 999, status: 'STORAGE' });
+        const records = res?.data?.records || [];
+        competitorOptions.value = records
+            .map((item: any) => ({ label: item.enterpriseName || item.competitorName, value: item.enterpriseName || item.competitorName }))
+            .filter((item: any) => item.value);
+    } catch (error) {
+        console.error('加载竞争对手下拉失败:', error);
+    }
+};
+
+/**
+ * 加载客户名称下拉（客户档案库已入库）。
+ * @returns 无返回值
+ */
+const loadCustomerOptions = async () => {
+    try {
+        const res: any = await getCustomerBasePageApi({ current: 1, size: 999, status: 'STORAGE' });
+        const records = res?.data?.records || [];
+        customerOptions.value = records
+            .map((item: any) => ({ label: item.customerName || item.enterpriseName, value: item.customerName || item.enterpriseName }))
+            .filter((item: any) => item.value);
+    } catch (error) {
+        console.error('加载客户下拉失败:', error);
+    }
+};
+
+// ==================== 矿石供给行操作 ====================
+/** 新增一条矿石供给空行 */
+const addOreSupply = () => {
+    formData.value.oreSupplyList.push({ customerName: null, quantity: null });
+};
+
+/**
+ * 删除指定矿石供给行。
+ * @param idx 行下标
+ */
+const removeOreSupply = (idx: number) => {
+    formData.value.oreSupplyList.splice(idx, 1);
+};
+
+/**
+ * 校验矿石供给行（已开始的行必须完整：客户名称、数量均必填）。
+ * @returns 校验是否通过
+ */
+const validateOreSupply = () => {
+    for (let i = 0; i < formData.value.oreSupplyList.length; i++) {
+        const item = formData.value.oreSupplyList[i];
+        const started = item.customerName || item.quantity !== null;
+        if (!started) continue;
+        if (!item.customerName) {
+            message.warning(`矿石供给第 ${i + 1} 行请选择客户名称`);
+            return false;
+        }
+        if (item.quantity === null || item.quantity === undefined) {
+            message.warning(`矿石供给第 ${i + 1} 行请输入数量`);
+            return false;
+        }
+    }
+    return true;
+};
 
 // ==================== 数字输入归一化 ====================
 // 统一用 n-input 承载数字字段，避免 n-input-number 自动格式化造成的编辑体验差异。
@@ -351,14 +430,6 @@ const handleDecimalBlur = (field: DecimalField) => {
     }
 };
 
-/**
- * 处理电话号码输入：只允许数字，最多11位
- * @param value - 输入值
- */
-const handlePhoneInput = (value: string) => {
-    formData.value.contactPhone = `${value ?? ''}`.replace(/\D/g, '').slice(0, 11);
-};
-
 // ==================== 字段映射 ====================
 /**
  * 从数据对象中按优先级获取字段值
@@ -389,12 +460,7 @@ const toStringValue = (value: any) => (value === null || value === undefined ? '
 const normalizeDetailToForm = (data: any, copy = false): CompetitorSurveyForm => ({
     id: copy ? undefined : getValue(data, ['id']),
     competitorName: getValue(data, ['competitorName']),
-    region: getValue(data, ['region'], null),
-    mineType: getValue(data, ['mineType'], null),
     surveyMonth: getValue(data, ['surveyMonth'], null),
-    detailAddress: getValue(data, ['detailAddress']),
-    contactPerson: getValue(data, ['contactPerson']),
-    contactPhone: getValue(data, ['contactPhone']),
     inventory: toStringValue(getValue(data, ['inventory'])),
     operatingRate: toStringValue(getValue(data, ['operatingRate'])),
     rateChangeReason: getValue(data, ['rateChangeReason']),
@@ -406,6 +472,12 @@ const normalizeDetailToForm = (data: any, copy = false): CompetitorSurveyForm =>
     salesPrice: toStringValue(getValue(data, ['salesPrice'])),
     salesChannel: getValue(data, ['salesChannel']),
     priceChangeReason: getValue(data, ['priceChangeReason']),
+    oreSupplyList: Array.isArray(getValue(data, ['oreSupplyList'], []))
+        ? getValue(data, ['oreSupplyList'], []).map((item: any) => ({
+              customerName: item?.customerName ?? null,
+              quantity: item?.quantity ?? null,
+          }))
+        : [],
     status: copy ? '' : getValue(data, ['status']),
 });
 
@@ -425,12 +497,7 @@ const toNumberOrUndefined = (value: string, parser: (value: string) => number) =
 const buildSubmitPayload = (status: 'DRAFT' | 'ARCHIVED') => ({
     ...(isEdit.value ? { id: route.query.id } : {}),
     competitorName: formData.value.competitorName,
-    region: formData.value.region,
-    mineType: formData.value.mineType,
     surveyMonth: formData.value.surveyMonth,
-    detailAddress: formData.value.detailAddress,
-    contactPerson: formData.value.contactPerson,
-    contactPhone: formData.value.contactPhone,
     inventory: toNumberOrUndefined(formData.value.inventory, parseFloat),
     operatingRate: toNumberOrUndefined(formData.value.operatingRate, (value) => parseInt(value, 10)),
     rateChangeReason: formData.value.rateChangeReason,
@@ -442,6 +509,10 @@ const buildSubmitPayload = (status: 'DRAFT' | 'ARCHIVED') => ({
     salesPrice: toNumberOrUndefined(formData.value.salesPrice, (value) => parseInt(value, 10)),
     salesChannel: formData.value.salesChannel,
     priceChangeReason: formData.value.priceChangeReason,
+    // 矿石供给：过滤掉未填写的空行
+    oreSupplyList: formData.value.oreSupplyList
+        .filter((item) => item.customerName || item.quantity !== null)
+        .map((item) => ({ customerName: item.customerName, quantity: item.quantity })),
     status,
 });
 
@@ -504,18 +575,12 @@ const createRequiredIntegerRule = (label: string, max?: number) => ({
 
 /** 表单验证规则配置 */
 const rules = {
-    competitorName: { required: true, message: '请填写竞争对手名称', trigger: 'blur', saveOnly: true },
-    region: { required: true, message: '请选择区域', trigger: 'change' },
-    mineType: { required: true, message: '请选择矿山类型', trigger: 'change' },
+    competitorName: { required: true, message: '请选择企业名称', trigger: 'change', saveOnly: true },
     surveyMonth: { required: true, message: '请选择调研月份', trigger: 'change', saveOnly: true },
     inventory: { ...createRequiredDecimalRule('矿石库存'), saveOnly: true },
     operatingRate: { ...createRequiredIntegerRule('开工率', 100), saveOnly: true },
     monthlyOutput: createRequiredDecimalRule('月产量'),
     maxOutput: createOptionalDecimalRule('最大产能'),
-    productGrade: createRequiredDecimalRule('产品品位', 100),
-    wharfName: { required: true, message: '请输入主要码头名称', trigger: 'blur' },
-    wharfInventory: createRequiredDecimalRule('主要码头库存'),
-    salesPrice: createRequiredIntegerRule('销售价格'),
 };
 
 // ==================== 历史数据对比逻辑 ====================
@@ -665,6 +730,8 @@ const validateForm = async (saveOnly = false) => {
 const handleSaveOrSubmit = async (status: 'DRAFT' | 'ARCHIVED') => {
     const canProceed = await validateForm(status === 'DRAFT');
     if (!canProceed) return;
+    // 矿石供给行内必填校验
+    if (!validateOreSupply()) return;
     // 提交前进行历史数据对比，用户取消则中止
     const canContinue = await confirmHistoryDifference();
     if (!canContinue) return;
@@ -705,7 +772,7 @@ const loadEditData = async () => {
  * 组件挂载时的初始化逻辑
  */
 onMounted(async () => {
-    await loadEditData();
+    await Promise.all([loadEditData(), loadCompetitorOptions(), loadCustomerOptions()]);
 });
 </script>
 
@@ -723,6 +790,26 @@ onMounted(async () => {
         font-weight: 600;
         color: #333;
         margin: 0 0 16px 0;
+    }
+}
+
+/* 矿石供给动态行 */
+.ore-supply-box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+
+    .ore-supply-row {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .error-btn {
+            flex-shrink: 0;
+        }
     }
 }
 

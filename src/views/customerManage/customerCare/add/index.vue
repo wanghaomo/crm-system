@@ -139,6 +139,7 @@ const isAppPage = isApp();
 const formRef = ref<any>(null);
 const dialog = useDialog();
 const recordId = computed(() => route.query.id);
+const copyId = computed(() => route.query.copyId); // 复制模式：以该记录为模板新增
 const isEdit = computed(() => !!recordId.value);
 const pageTitle = computed(() => (isEdit.value ? '编辑客户关怀' : '新增客户关怀'));
 // 支持的文件类型：PDF / 图片 / Word / Excel
@@ -297,10 +298,11 @@ const buildSubmitData = (status: 'PENDING' | 'COMPLETED') => {
 // ========== 详情数据 ==========
 
 
-const loadDetail = async () => {
-    if (!recordId.value) return;
+const loadDetail = async (id: any = null, isCopy = false) => {
+    const targetId = id ?? recordId.value;
+    if (!targetId) return;
     try {
-        const res: any = await getCustomerCareApi(recordId.value);
+        const res: any = await getCustomerCareApi(targetId);
         const detail = res?.data;
         if (!detail) {
             window.$message.warning('未找到该记录');
@@ -331,6 +333,10 @@ const loadDetail = async () => {
             plusServicesExecution: detail.plusServicesExecution || '',
             cancelReason: detail.cancelReason || '',
         });
+        if (isCopy) {
+            formData.status = '';
+            delete (formData as any).id; // 复制模式：清除原记录ID，避免保存时覆盖原单
+        }
     } catch (error) {
         console.error('加载详情失败:', error);
         window.$message.error('加载详情失败');
@@ -447,6 +453,8 @@ onMounted(() => {
     loadVisitDicts(); // 加载拜访相关字典
     if (isEdit.value) {
         loadDetail();
+    } else if (copyId.value) {
+        loadDetail(copyId.value, true); // 复制模式：载入模板数据但不带ID与状态
     }
 });
 </script>

@@ -33,6 +33,16 @@
                     </n-radio-group>
                   </n-form-item>
                 </n-grid-item>
+                <n-grid-item>
+                  <n-form-item label="是否合作客户" path="isCooperationCustomer">
+                    <n-radio-group v-model:value="formData.isCooperationCustomer" :disabled="isStorageDisabled">
+                      <n-space>
+                        <n-radio value="YES">是</n-radio>
+                        <n-radio value="NO">否</n-radio>
+                      </n-space>
+                    </n-radio-group>
+                  </n-form-item>
+                </n-grid-item>
                 <n-grid-item v-if="formData.customerType === 'TRADER'">
                   <n-form-item label="是否子公司贸易商" path="isSubsidiary">
                     <n-radio-group v-model:value="formData.isSubsidiary">
@@ -54,8 +64,45 @@
                   </n-form-item>
                 </n-grid-item>
                 <n-grid-item>
-                  <n-form-item label="区域" path="region">
-                    <n-select v-model:value="formData.region" :options="regionOptions" placeholder="请选择" />
+                  <n-form-item label="地址" path="addressRegion">
+                    <n-cascader
+                      v-model:value="formData.addressRegion"
+                      :options="regionOptions"
+                      check-strategy="child"
+                      show-path
+                      placeholder="请选择省/市/区"
+                      clearable />
+                  </n-form-item>
+                </n-grid-item>
+                <n-grid-item>
+                  <n-form-item label="详细地址" path="detailAddress">
+                    <n-input v-model:value="formData.detailAddress" placeholder="请输入详细地址" maxlength="100" clearable />
+                  </n-form-item>
+                </n-grid-item>
+                <n-grid-item>
+                  <n-form-item label="经度" path="longitude">
+                    <n-input-number
+                      v-model:value="formData.longitude"
+                      :precision="6"
+                      :min="-180"
+                      :max="180"
+                      :show-button="false"
+                      placeholder="请输入经度"
+                      style="width: 100%"
+                      clearable />
+                  </n-form-item>
+                </n-grid-item>
+                <n-grid-item>
+                  <n-form-item label="纬度" path="latitude">
+                    <n-input-number
+                      v-model:value="formData.latitude"
+                      :precision="6"
+                      :min="-90"
+                      :max="90"
+                      :show-button="false"
+                      placeholder="请输入纬度"
+                      style="width: 100%"
+                      clearable />
                   </n-form-item>
                 </n-grid-item>
                 <n-grid-item v-if="formData.customerType === 'CHEMICAL'">
@@ -159,7 +206,7 @@
 
             <!-- 客户评估 -->
             <div
-              v-if="formData.customerType === 'CHEMICAL'"
+              v-if="formData.customerType === 'CHEMICAL' && formData.isCooperationCustomer !== 'NO'"
               class="section customer-evaluation-section">
               <div class="section-title evaluation-section-title">
                 <span class="title-line"></span>
@@ -245,6 +292,7 @@ import {
   NDatePicker,
   NInputNumber,
   NTooltip,
+  NCascader,
 } from "naive-ui";
 
 import { AddOutline, InformationCircleOutline } from "@vicons/ionicons5";
@@ -257,6 +305,7 @@ import {
 import type { CustomerBaseCreateDTO } from "@/types/customerManage";
 import enumCfg from "@/config/enum.cfg";
 import { STAR_LEVEL_OPTIONS } from "@/config/customer";
+import { buildRegionOptions } from "@/constants/regionData";
 import {
   CUSTOMER_EVALUATION_CONFIG,
   CUSTOMER_EVALUATION_FIELD_MAP,
@@ -352,6 +401,8 @@ const validateContactTable = (): string | null => {
  */
 const validateCustomerEvaluation = (): string | null => {
   if (formData.customerType === "TRADER") return null;
+  // 非合作客户不需要填写客户评估信息
+  if (formData.isCooperationCustomer === "NO") return null;
   for (let index = 0; index < CUSTOMER_EVALUATION_CONFIG.length; index += 1) {
     const config = CUSTOMER_EVALUATION_CONFIG[index];
     const detail = formData.evaluationDetailList[index];
@@ -373,7 +424,11 @@ const formData = reactive({
   cooperationStatus: null as string | null, // 合作状态
   manager: [] as any[], // 客户经理对象数组
   manageCodes: [] as string[], // 客户经理code数组
-  region: null as string | null, // 区域
+  addressRegion: null as string | null, // 地址（省市区级联叶节点全路径，如 四川省/乐山市/马边彝族自治县）
+  detailAddress: "", // 详细地址
+  longitude: null as number | null, // 经度
+  latitude: null as number | null, // 纬度
+  isCooperationCustomer: "YES" as "YES" | "NO", // 是否合作客户：非合作客户不填评估、不进内部业务流程下拉
   riskInfo: "", // 风控信息
   cooperationProcessExplanation: "", // 合作流程说明
   importantContractCondition: "", // 重要合同条件
@@ -391,8 +446,8 @@ const cooperationStatusOptions = [
   { label: "终止", value: "TERMINATED" },
 ];
 
-// 区域选项
-const regionOptions = ref<{ label: string; value: string }[]>([]);
+// 省市区级联静态数据
+const regionOptions = buildRegionOptions();
 const coreProductOptions = ref<{ label: string; value: string }[]>([]);
 
 // 数字输入校验：整数不超过12位，小数不超过2位
@@ -1073,7 +1128,9 @@ const buildSubmitData = (status: "DRAFT" | "STORAGE"): CustomerBaseCreateDTO => 
     remark: item.remark || undefined,
   }));
 
-  const evaluationData = isChemical
+  // 非合作客户不提交客户评估信息与总分
+  const skipEvaluation = formData.isCooperationCustomer === "NO";
+  const evaluationData = isChemical && !skipEvaluation
     ? CUSTOMER_EVALUATION_CONFIG.reduce<Record<string, string>>(
       (result, config, index) => {
         const field = CUSTOMER_EVALUATION_FIELD_MAP[config.indicatorCode];
@@ -1092,7 +1149,7 @@ const buildSubmitData = (status: "DRAFT" | "STORAGE"): CustomerBaseCreateDTO => 
     traderList,
     contactList: contactListData,
     ...evaluationData,
-    baseScore: isChemical ? Number(formData.baseScore) : undefined,
+    baseScore: isChemical && !skipEvaluation ? Number(formData.baseScore) : undefined,
   };
 };
 
@@ -1184,9 +1241,35 @@ const rules = {
     },
     trigger: ["change"],
   },
+  addressRegion: {
+    required: true,
+    validator: (_rule: any, value: any) => {
+      if (!value) return new Error("请选择地址");
+      return true;
+    },
+    trigger: ["change"],
+  },
+  longitude: {
+    required: true,
+    validator: (_rule: any, value: any) => {
+      if (value === null || value === undefined || value === "") return new Error("请输入经度");
+      return true;
+    },
+    trigger: ["blur", "change"],
+  },
+  latitude: {
+    required: true,
+    validator: (_rule: any, value: any) => {
+      if (value === null || value === undefined || value === "") return new Error("请输入纬度");
+      return true;
+    },
+    trigger: ["blur", "change"],
+  },
   baseScore: {
     validator: (_rule: any, value: any) => {
       if (formData.customerType === "TRADER") return true;
+      // 非合作客户不填评估信息，总分一并跳过
+      if (formData.isCooperationCustomer === "NO") return true;
       if (value === null || value === undefined || value === "") {
         return new Error("请输入客户评估总分");
       }
@@ -1276,7 +1359,17 @@ const loadDetailData = async (id: string) => {
         cooperationStatus: data.cooperationStatus || null,
         manager: data.manager || [],
         manageCodes: (data.manager || []).map((item: any) => item.code),
-        region: data.region || null,
+        addressRegion: data.addressRegion || null,
+        detailAddress: data.detailAddress || "",
+        longitude:
+          data.longitude === null || data.longitude === undefined || data.longitude === ""
+            ? null
+            : Number(data.longitude),
+        latitude:
+          data.latitude === null || data.latitude === undefined || data.latitude === ""
+            ? null
+            : Number(data.latitude),
+        isCooperationCustomer: data.isCooperationCustomer || "YES",
         riskInfo: data.riskInfo || "",
         cooperationProcessExplanation: data.cooperationProcessExplanation || "",
         importantContractCondition: data.importantContractCondition || "",
@@ -1352,18 +1445,14 @@ const loadDetailData = async (id: string) => {
   }
 };
 
-// 加载字典数据
+// 加载字典数据（核心产品类型；地址已改为静态省市区级联，不再走字典）
 const loadDictData = async () => {
   try {
     const res = await getDictMapApi({
-      parentCodes: [enumCfg["区域类型"], enumCfg["核心产品类型"]],
+      parentCodes: [enumCfg["核心产品类型"]],
     });
 
     if (res.code === 200) {
-      regionOptions.value = (res.data?.[enumCfg["区域类型"]] || []).map((item: any) => ({
-        label: item.name,
-        value: item.code,
-      }));
       coreProductOptions.value = (res.data?.[enumCfg["核心产品类型"]] || []).map(
         (item: any) => ({
           label: item.name,

@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, h, onMounted, resolveComponent } from 'vue';
+import { ref, reactive, h, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { NModal, useMessage } from 'naive-ui';
 import ChemicalCompanyDetail from './components/ChemicalCompanyDetail.vue';
@@ -126,21 +126,6 @@ const queryConfiguration = [
 // ==================== 表格列 ====================
 const tableColumns = [
     { title: '企业单位名称', key: 'enterpriseName', width: 150 },
-    {
-        title: '区域',
-        key: 'region',
-        width: 120,
-        render: (row: any) => {
-            const MxDict = resolveComponent('MxDict');
-            return h(MxDict as any, {
-                modelValue: row.region,
-                placeholder: '请选择',
-                size: 'small',
-                text: true,
-                dictType: '区域类型',
-            });
-        },
-    },
     { title: '调研月份', key: 'surveyMonth', width: 100 },
     {
         title: '单据状态',
