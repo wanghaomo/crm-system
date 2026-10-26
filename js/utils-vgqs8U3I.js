@@ -1,0 +1,1 @@
+var r=r=>{if(null==r||""===r)return"--";const t=String(r),n=t.match(/^([+-]?)(\d+)(\.\d+)?$/);if(!n)return t;const[,e,a,c=""]=n;return`${e}${a.replace(/\B(?=(\d{3})+(?!\d))/g,",")}${c}`};export{r as t};

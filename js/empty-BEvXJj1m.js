@@ -1,0 +1,1 @@
+var e="/crm-system/images/empty-Df0-56KI.png";export{e as t};

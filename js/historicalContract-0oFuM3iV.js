@@ -1,0 +1,1 @@
+import{Mt as a,Tt as t,Xt as s}from"./naive-ui-uJhr2Rh9.js";import{t as e}from"./web-DkMGJM15.js";var r=a({__name:"index",setup:a=>(a,r)=>(s(),t(e))});export{r as default};

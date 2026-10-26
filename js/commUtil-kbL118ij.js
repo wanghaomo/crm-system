@@ -1,0 +1,1 @@
+var t=t=>{const r=["零","一","二","三","四","五","六","七","八","九"],s=["","十","百","千","万"];if(0===t)return r[0];let n="",e=t,o=0;for(;e>0;){const t=e%10;0!==t?n=r[t]+s[o]+n:n.charAt(0)!==r[0]&&(n=r[0]+n),e=Math.floor(e/10),o++}return n.startsWith("一十")&&(n=n.substring(1)),n.endsWith(r[0])&&(n=n.substring(0,n.length-1)),n};export{t};

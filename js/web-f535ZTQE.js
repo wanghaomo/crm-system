@@ -1,0 +1,1 @@
+import{Dt as a,Xt as e,wt as t}from"./naive-ui-uJhr2Rh9.js";import{yt as r}from"./index-CDizu8vA.js";var s={class:"chemical-company-detail-web"};var i=r({},[["render",function(r,i){return e(),a("div",s,[...i[0]||(i[0]=[t("h2",null,"化工企业调研详情 - PC端",-1),t("p",null,"PC端详情页面待实现",-1)])])}],["__scopeId","data-v-0937e11f"]]);export{i as default};

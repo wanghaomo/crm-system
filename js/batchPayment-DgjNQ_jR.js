@@ -1,0 +1,1 @@
+import{Dt as t,Tn as a,Tt as m,Xt as s,nn as r}from"./naive-ui-uJhr2Rh9.js";import{d as n}from"./comm-DKMEjJ7j.js";import o from"./batchPayment-DTzx3b5r.js";import e from"./batchPayment-BZsDaDhZ.js";var i={__name:"batchPayment",setup(i){const p=n();return(n,i)=>(s(),t("div",null,[(s(),m(r(a(p)?o:e)))]))}};export{i as default};

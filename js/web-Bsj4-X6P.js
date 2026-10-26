@@ -1,0 +1,1 @@
+import{n as a}from"./rolldown-runtime-NMqb_1LM.js";import{Mt as s,Tt as t,Xt as o}from"./naive-ui-uJhr2Rh9.js";import{yt as r}from"./index-CDizu8vA.js";import{t as e}from"./dashboard-DpSl0q40.js";var m=s({__name:"web",setup:a=>(a,s)=>(o(),t(e))}),i=a({default:()=>d}),d=r(m,[["__scopeId","data-v-877e1f15"]]);export{i as n,d as t};

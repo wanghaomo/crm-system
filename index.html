@@ -1,0 +1,55 @@
+<!DOCTYPE html><html lang=""><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, initial-scale=1.0,viewport-fit=cover">
+    <link rel="icon" href="/crm-system/logo.png">
+    <title>CRM</title>
+    <script src="/crm-system/public-path.js"></script>
+     <script type="text/javascript" src="https://lf-scm-cn.feishucdn.com/lark/op/h5-js-sdk-1.5.44.js"></script>
+    <script crossorigin="">import('/crm-system/js/index-CDizu8vA.js').finally(() => {
+            
+    const qiankunLifeCycle = window.moudleQiankunAppLifeCycles && window.moudleQiankunAppLifeCycles['mx-crm'];
+    if (qiankunLifeCycle) {
+      window.proxy.vitemount((props) => qiankunLifeCycle.mount(props));
+      window.proxy.viteunmount((props) => qiankunLifeCycle.unmount(props));
+      window.proxy.vitebootstrap(() => qiankunLifeCycle.bootstrap());
+      window.proxy.viteupdate((props) => qiankunLifeCycle.update(props));
+    }
+  
+          })</script>
+    <link rel="stylesheet" crossorigin="" href="/crm-system/css/pdf-BHq6j76L.css">
+    <link rel="stylesheet" crossorigin="" href="/crm-system/css/vant-KXXoTPoz.css">
+    <link rel="stylesheet" crossorigin="" href="/crm-system/css/vendor-BOTWtezb.css">
+    <link rel="stylesheet" crossorigin="" href="/crm-system/css/wang-editor-Bn33XAxt.css">
+    <link rel="stylesheet" crossorigin="" href="/crm-system/css/index-BVjYNsiu.css">
+  </head>
+  <body>
+    <noscript>
+      <strong>数据加载失败，请退出后登录后重新加载</strong>
+    </noscript>
+    <div id="app" class="mx_mes_backend"></div>
+    <!-- built files will be auto injected -->
+  
+
+<script>
+  const createDeffer = (hookName) => {
+    const d = new Promise((resolve, reject) => {
+      window.proxy && (window.proxy[`vite${hookName}`] = resolve)
+    })
+    return props => d.then(fn => fn(props));
+  }
+  const bootstrap = createDeffer('bootstrap');
+  const mount = createDeffer('mount');
+  const unmount = createDeffer('unmount');
+  const update = createDeffer('update');
+
+  ;(global => {
+    global.qiankunName = 'mx-crm';
+    global['mx-crm'] = {
+      bootstrap,
+      mount,
+      unmount,
+      update
+    };
+  })(window);
+</script></body></html>

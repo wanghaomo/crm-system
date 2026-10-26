@@ -1,0 +1,1 @@
+import{n as s}from"./rolldown-runtime-NMqb_1LM.js";import{Tn as r,Tt as t,Xt as a,nn as o}from"./naive-ui-uJhr2Rh9.js";import{d as m}from"./comm-DKMEjJ7j.js";import{t as n}from"./app-CoifXy3g2.js";import{t as e}from"./web-BYuRU-1_.js";var i=s({default:()=>p}),p={__name:"index",setup(s){const i=m();return(s,m)=>(a(),t(o(r(i)?n:e)))}};export{i as n,p as t};
