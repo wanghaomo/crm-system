@@ -3,9 +3,9 @@
         <!-- 顶部标题区 -->
         <div class="header">
             <div class="header-left">
-                <div class="header-title">矿产品供需数据地图</div>
+                <div class="header-title">磷矿石供需数据地图</div>
             </div>
-            <div class="header-right" style="margin-left:auto;">
+            <div class="header-right">
                 <div class="datetime-display">{{ datetime }}</div>
                 <div class="fullscreen-btn" title="全屏" @click="toggleFullscreen">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#69b1ff" stroke-width="2">
@@ -23,13 +23,19 @@
                     <div class="panel-corner-bl"></div>
                     <div class="panel-corner-br"></div>
                     <div class="panel-header">
-                        <div class="panel-title supply">四川矿产供给</div>
+                        <div class="panel-title supply">四川磷矿石产量</div>
                     </div>
                     <div class="panel-body" style="height:calc(100% - 42px);">
                         <div class="supply-overview-wrap">
                             <div class="supply-big-number">
-                                <div class="big-label">总产矿量</div>
-                                <div class="big-value">{{ animatedSupply }}</div>
+                                <div class="big-label">预计总产量</div>
+                                <div class="big-value">{{ animatedExpected }}</div>
+                                <div class="big-unit">万吨 / 年</div>
+                            </div>
+                            <div class="supply-divider"></div>
+                            <div class="supply-big-number actual">
+                                <div class="big-label">实际产量</div>
+                                <div class="big-value">{{ animatedActual }}</div>
                                 <div class="big-unit">万吨 / 年</div>
                             </div>
                         </div>
@@ -40,17 +46,28 @@
                     <div class="panel-corner-bl"></div>
                     <div class="panel-corner-br"></div>
                     <div class="panel-header">
-                        <div class="panel-title supply">主要矿区分布</div>
-                        <div style="font-size:11px;color:#8c9ab4;">TOP 6 矿区</div>
+                        <div class="panel-title supply">主要矿山产量分布</div>
+                        <div style="font-size:11px;color:#8c9ab4;">TOP 10 矿区</div>
                     </div>
-                    <div class="panel-body" style="height:calc(100% - 42px);">
-                        <div class="mine-list">
-                            <div v-for="m in mineListData" :key="m.name" class="mine-item">
-                                <div class="mine-name">{{ m.name }}</div>
-                                <div class="mine-type">{{ m.type }}</div>
-                                <div class="mine-bar-wrap">
-                                    <div class="mine-bar"><div class="mine-bar-fill" :style="{ width: m.pct + '%' }"></div></div>
-                                    <div class="mine-output">{{ m.output }}万吨</div>
+                    <div class="panel-body mine-list-body" style="height:calc(100% - 42px);">
+                        <div class="mine-list-scroll">
+                            <div class="mine-list" v-for="copy in 2" :key="copy">
+                                <div v-for="m in mineListData" :key="m.name" class="mine-item">
+                                    <div class="mine-name">{{ m.name }}</div>
+                                    <div class="mine-bar-wrap">
+                                        <div class="mine-bars">
+                                            <div class="mine-bar-row">
+                                                <span class="mine-bar-tag">预</span>
+                                                <div class="mine-bar"><div class="mine-bar-fill" :style="{ width: m.pctExpected + '%' }"></div></div>
+                                                <div class="mine-output">{{ m.expected }}万吨</div>
+                                            </div>
+                                            <div class="mine-bar-row">
+                                                <span class="mine-bar-tag actual">实</span>
+                                                <div class="mine-bar"><div class="mine-bar-fill actual" :style="{ width: m.pctActual + '%' }"></div></div>
+                                                <div class="mine-output actual">{{ m.actual }}万吨</div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -61,8 +78,8 @@
                     <div class="panel-corner-bl"></div>
                     <div class="panel-corner-br"></div>
                     <div class="panel-header">
-                        <div class="panel-title supply">供给趋势</div>
-                        <div style="font-size:11px;color:#8c9ab4;">近12个月</div>
+                        <div class="panel-title supply">主要矿山供给趋势</div>
+                        <div style="font-size:11px;color:#8c9ab4;">TOP5 · 近8月 + 未来4月</div>
                     </div>
                     <div class="panel-body" style="height:calc(100% - 42px);padding:8px;">
                         <div ref="supplyTrendRef" class="chart-container"></div>
@@ -115,13 +132,19 @@
                     <div class="panel-corner-bl"></div>
                     <div class="panel-corner-br"></div>
                     <div class="panel-header">
-                        <div class="panel-title demand">湖北客户需求</div>
+                        <div class="panel-title demand">湖北磷矿石需求</div>
                     </div>
                     <div class="panel-body" style="height:calc(100% - 42px);">
                         <div class="supply-overview-wrap">
                             <div class="supply-big-number demand-big-number">
-                                <div class="big-label">总需求量</div>
-                                <div class="big-value">{{ animatedDemand }}</div>
+                                <div class="big-label">预计总需求</div>
+                                <div class="big-value">{{ animatedDemandExpected }}</div>
+                                <div class="big-unit">万吨 / 年</div>
+                            </div>
+                            <div class="supply-divider demand-divider"></div>
+                            <div class="supply-big-number demand-big-number actual">
+                                <div class="big-label">实际需求</div>
+                                <div class="big-value">{{ animatedDemandActual }}</div>
                                 <div class="big-unit">万吨 / 年</div>
                             </div>
                         </div>
@@ -132,17 +155,28 @@
                     <div class="panel-corner-bl"></div>
                     <div class="panel-corner-br"></div>
                     <div class="panel-header">
-                        <div class="panel-title demand">需求城市分布</div>
-                        <div style="font-size:11px;color:#8c9ab4;">TOP 6 城市</div>
+                        <div class="panel-title demand">主要客户需求分布</div>
+                        <div style="font-size:11px;color:#8c9ab4;">TOP 10 客户</div>
                     </div>
-                    <div class="panel-body" style="height:calc(100% - 42px);">
-                        <div class="mine-list">
-                            <div v-for="m in demandListData" :key="m.name" class="mine-item demand">
-                                <div class="mine-name">{{ m.name }}</div>
-                                <div class="mine-type">{{ m.type }}</div>
-                                <div class="mine-bar-wrap">
-                                    <div class="mine-bar"><div class="mine-bar-fill" :style="{ width: m.pct + '%' }"></div></div>
-                                    <div class="mine-output">{{ m.demand }}万吨</div>
+                    <div class="panel-body mine-list-body" style="height:calc(100% - 42px);">
+                        <div class="mine-list-scroll">
+                            <div class="mine-list" v-for="copy in 2" :key="copy">
+                                <div v-for="m in demandListData" :key="m.name" class="mine-item demand">
+                                    <div class="mine-name">{{ m.name }}</div>
+                                    <div class="mine-bar-wrap">
+                                        <div class="mine-bars">
+                                            <div class="mine-bar-row">
+                                                <span class="mine-bar-tag">预</span>
+                                                <div class="mine-bar"><div class="mine-bar-fill" :style="{ width: m.pctExpected + '%' }"></div></div>
+                                                <div class="mine-output">{{ m.expected }}万吨</div>
+                                            </div>
+                                            <div class="mine-bar-row">
+                                                <span class="mine-bar-tag actual">实</span>
+                                                <div class="mine-bar"><div class="mine-bar-fill actual-demand" :style="{ width: m.pctActual + '%' }"></div></div>
+                                                <div class="mine-output actual-demand-text">{{ m.actual }}万吨</div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -153,8 +187,8 @@
                     <div class="panel-corner-bl"></div>
                     <div class="panel-corner-br"></div>
                     <div class="panel-header">
-                        <div class="panel-title demand">需求趋势 & 预测</div>
-                        <div style="font-size:11px;color:#8c9ab4;">近12月 + Q4预测</div>
+                        <div class="panel-title demand">主要客户需求趋势</div>
+                        <div style="font-size:11px;color:#8c9ab4;">TOP5 · 近8月 + 未来4月</div>
                     </div>
                     <div class="panel-body" style="height:calc(100% - 42px);padding:8px;">
                         <div ref="demandTrendRef" class="chart-container"></div>
@@ -171,34 +205,47 @@ import * as echarts from 'echarts';
 
 /* ==================== Mock 数据 ==================== */
 const sichuanMines = [
-    { name: '攀枝花', type: '钒钛磁铁矿', output: 6800, coord: [101.71, 26.58] },
-    { name: '凉山州', type: '铜铅锌稀土', output: 4500, coord: [102.25, 27.89] },
-    { name: '泸州', type: '煤炭/硫铁矿', output: 3800, coord: [105.44, 28.87] },
-    { name: '乐山', type: '磷矿', output: 3200, coord: [103.76, 29.59] },
-    { name: '宜宾', type: '煤炭/硫铁矿', output: 3100, coord: [104.64, 28.76] },
-    { name: '达州', type: '煤炭', output: 2800, coord: [107.50, 31.21] },
+    { name: '马边磷矿', type: '磷矿', expected: 6800, actual: 6100, coord: [103.55, 28.83] },
+    { name: '雷波磷矿', type: '磷矿', expected: 6200, actual: 5800, coord: [103.57, 28.26] },
+    { name: '绵竹磷矿', type: '磷矿', expected: 5400, actual: 4900, coord: [104.22, 31.34] },
+    { name: '清平磷矿', type: '磷矿', expected: 4800, actual: 4500, coord: [104.13, 31.50] },
+    { name: '金河磷矿', type: '磷矿', expected: 4200, actual: 3900, coord: [104.05, 31.42] },
+    { name: '汉源磷矿', type: '磷矿', expected: 3600, actual: 3200, coord: [102.67, 29.35] },
+    { name: '会东磷矿', type: '磷矿', expected: 3100, actual: 2800, coord: [102.58, 26.63] },
+    { name: '叙永磷矿', type: '磷矿', expected: 2600, actual: 2400, coord: [105.43, 28.17] },
+    { name: '什邡磷矿', type: '磷矿', expected: 2200, actual: 1900, coord: [104.16, 31.13] },
+    { name: '绵竹天池磷矿', type: '磷矿', expected: 1800, actual: 1500, coord: [104.10, 31.45] },
 ];
-const hubeiCities = [
-    { name: '宜昌', type: '宜化集团等', demand: 2100, coord: [111.30, 30.70] },
-    { name: '武汉', type: '化工区/乙烯', demand: 1950, coord: [114.31, 30.60] },
-    { name: '襄阳', type: '化工/建材', demand: 1600, coord: [112.12, 32.02] },
-    { name: '黄石', type: '冶金/化工', demand: 1250, coord: [115.03, 30.20] },
-    { name: '荆门', type: '化工产业园', demand: 1200, coord: [112.20, 31.03] },
-    { name: '鄂州', type: '钢铁/化工', demand: 1180, coord: [114.89, 30.40] },
+const hubeiCustomers = [
+    { name: '宜化集团', expected: 2100, actual: 1980, coord: [111.30, 30.70] },
+    { name: '兴发集团', expected: 1950, actual: 1820, coord: [111.35, 31.22] },
+    { name: '三宁化工', expected: 1800, actual: 1650, coord: [111.76, 30.42] },
+    { name: '华鲁恒升', expected: 1650, actual: 1520, coord: [114.31, 30.60] },
+    { name: '新洋丰', expected: 1500, actual: 1380, coord: [112.20, 31.03] },
+    { name: '鄂中生态', expected: 1350, actual: 1240, coord: [112.58, 30.87] },
+    { name: '祥云股份', expected: 1200, actual: 1080, coord: [115.55, 29.85] },
+    { name: '湖北宜化', expected: 1100, actual: 980, coord: [111.28, 30.69] },
+    { name: '黄麦岭化工', expected: 950, actual: 850, coord: [114.42, 30.92] },
+    { name: '中化涪陵', expected: 820, actual: 720, coord: [107.42, 29.70] },
 ];
 /**
- * 生成截止「当前月份的上一月」的近 12 个月标签（如当前 2026-10 → 2025-10 ~ 2026-09）。
- * @returns 月份标签数组，格式「X月」
+ * 生成最近 8 个月（截止上月）+ 未来 4 个月的月份标签。
+ * @returns 月份标签数组，未来月份带「(预)」后缀
  */
-function buildRecentMonths(): string[] {
+function buildTrendMonths(): { months: string[]; actualCount: number } {
     const now = new Date();
     const labels: string[] = [];
-    // 从上个月往回推 12 个月
-    for (let i = 12; i >= 1; i--) {
+    // 最近 8 个月（截止上月）
+    for (let i = 8; i >= 1; i--) {
         const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
         labels.push(`${d.getMonth() + 1}月`);
     }
-    return labels;
+    // 未来 4 个月
+    for (let i = 0; i < 4; i++) {
+        const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
+        labels.push(`${d.getMonth() + 1}月(预)`);
+    }
+    return { months: labels, actualCount: 8 };
 }
 
 /**
@@ -216,52 +263,89 @@ function pseudoRandom(seed: string, idx: number): number {
     return (h % 1000) / 1000;
 }
 
-/** Top6 矿山实时供货趋势：X 轴按月截止上月，6 条矿山序列（万吨/月，围绕年产量/12 波动） */
-const top6SupplyTrend = (() => {
-    const months = buildRecentMonths();
+/** TOP5 矿山供给趋势：最近 8 个月实际 + 未来 4 个月预测（万吨/月） */
+const top5SupplyTrend = (() => {
+    const { months, actualCount } = buildTrendMonths();
     const now = new Date();
-    const series = sichuanMines.map((mine) => {
-        const monthlyAvg = mine.output / 12;
-        const data = months.map((_, i) => {
+    // 按预计年产量倒序取前 5
+    const top5 = [...sichuanMines].sort((a, b) => b.expected - a.expected).slice(0, 5);
+    const series = top5.map((mine) => {
+        const monthlyAvg = mine.expected / 12;
+        // 实际：8 个月，围绕 monthlyAvg ±15% 波动
+        const actual = months.slice(0, actualCount).map((_, i) => {
             const r = pseudoRandom(mine.name, i);
-            // 波动区间 -15% ~ +15%，最近一个月为「实时值」略向上偏移
-            const factor = 0.85 + r * 0.3 + (i === months.length - 1 ? 0.03 : 0);
-            return Math.round(monthlyAvg * factor);
+            return Math.round(monthlyAvg * (0.85 + r * 0.3));
         });
-        return { name: mine.name, type: mine.type, data };
+        // 预测：未来 4 个月，在前 8 月均值基础上略上扬（5%），用虚线展示
+        const lastActual = actual[actualCount - 1];
+        const forecast: (number | null)[] = new Array(actualCount - 1).fill(null);
+        // 预测起点与实际末月重叠（保证虚线连得上）
+        forecast.push(lastActual);
+        for (let i = 1; i <= 4; i++) {
+            const r = pseudoRandom(mine.name + ':forecast', i);
+            forecast.push(Math.round(lastActual * (1.02 + r * 0.08)));
+        }
+        return { name: mine.name, actual, forecast };
     });
-    return { year: now.getFullYear(), months, series };
+    return { year: now.getFullYear(), months, actualCount, series };
 })();
-const demandTrend = {
-    months: ['11月','12月','1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月(预)','12月(预)','1月(预)'],
-    actual: [720, 760, 690, 620, 750, 800, 830, 810, 780, 800, 820, 850],
-    forecast: [null, null, null, null, null, null, null, null, null, null, null, 850, 870, 890, 860],
-};
+/** TOP5 客户需求趋势：最近 8 个月实际 + 未来 4 个月预测（万吨/月） */
+const top5DemandTrend = (() => {
+    const { months, actualCount } = buildTrendMonths();
+    const now = new Date();
+    const top5 = [...hubeiCustomers].sort((a, b) => b.expected - a.expected).slice(0, 5);
+    const series = top5.map((cust) => {
+        const monthlyAvg = cust.expected / 12;
+        const actual = months.slice(0, actualCount).map((_, i) => {
+            const r = pseudoRandom(cust.name, i);
+            return Math.round(monthlyAvg * (0.85 + r * 0.3));
+        });
+        const lastActual = actual[actualCount - 1];
+        const forecast: (number | null)[] = new Array(actualCount - 1).fill(null);
+        forecast.push(lastActual);
+        for (let i = 1; i <= 4; i++) {
+            const r = pseudoRandom(cust.name + ':forecast', i);
+            forecast.push(Math.round(lastActual * (1.02 + r * 0.08)));
+        }
+        return { name: cust.name, actual, forecast };
+    });
+    return { year: now.getFullYear(), months, actualCount, series };
+})();
 const flowLines = [
-    { from: '攀枝花', to: '武汉', value: 850 }, { from: '攀枝花', to: '黄石', value: 620 },
-    { from: '攀枝花', to: '鄂州', value: 580 }, { from: '凉山州', to: '宜昌', value: 520 },
-    { from: '凉山州', to: '荆门', value: 380 }, { from: '泸州', to: '宜昌', value: 680 },
-    { from: '泸州', to: '武汉', value: 450 }, { from: '泸州', to: '襄阳', value: 520 },
-    { from: '乐山', to: '宜昌', value: 720 }, { from: '乐山', to: '荆门', value: 480 },
-    { from: '宜宾', to: '武汉', value: 380 }, { from: '宜宾', to: '黄石', value: 420 },
-    { from: '达州', to: '襄阳', value: 560 }, { from: '达州', to: '鄂州', value: 340 },
+    { from: '马边磷矿', to: '华鲁恒升', value: 850 }, { from: '马边磷矿', to: '祥云股份', value: 620 },
+    { from: '马边磷矿', to: '中化涪陵', value: 580 }, { from: '雷波磷矿', to: '宜化集团', value: 520 },
+    { from: '雷波磷矿', to: '新洋丰', value: 380 }, { from: '绵竹磷矿', to: '宜化集团', value: 680 },
+    { from: '绵竹磷矿', to: '华鲁恒升', value: 450 }, { from: '绵竹磷矿', to: '三宁化工', value: 520 },
+    { from: '清平磷矿', to: '宜化集团', value: 720 }, { from: '清平磷矿', to: '新洋丰', value: 480 },
+    { from: '金河磷矿', to: '华鲁恒升', value: 380 }, { from: '金河磷矿', to: '祥云股份', value: 420 },
+    { from: '汉源磷矿', to: '三宁化工', value: 560 }, { from: '汉源磷矿', to: '中化涪陵', value: 340 },
 ];
 
 /* ==================== 响应式状态 ==================== */
 const mapTypes = ['标准', '热力', '卫星'];
 const activeMapType = ref('标准');
 const datetime = ref('');
-const animatedSupply = ref('0');
-const animatedDemand = ref('0');
+const animatedExpected = ref('0');
+const animatedActual = ref('0');
+const animatedDemandExpected = ref('0');
+const animatedDemandActual = ref('0');
 
 /* ==================== 计算 ==================== */
 const mineListData = computed(() => {
-    const max = Math.max(...sichuanMines.map((m) => m.output));
-    return sichuanMines.map((m) => ({ ...m, pct: (m.output / max) * 100 }));
+    const max = Math.max(...sichuanMines.map((m) => m.expected));
+    return sichuanMines.map((m) => ({
+        ...m,
+        pctExpected: (m.expected / max) * 100,
+        pctActual: (m.actual / max) * 100,
+    }));
 });
 const demandListData = computed(() => {
-    const max = Math.max(...hubeiCities.map((c) => c.demand));
-    return hubeiCities.map((c) => ({ ...c, pct: (c.demand / max) * 100 }));
+    const max = Math.max(...hubeiCustomers.map((c) => c.expected));
+    return hubeiCustomers.map((c) => ({
+        ...c,
+        pctExpected: (c.expected / max) * 100,
+        pctActual: (c.actual / max) * 100,
+    }));
 });
 
 /* ==================== Refs ==================== */
@@ -306,58 +390,139 @@ function zoomMap(delta: number) {
 /* ==================== ECharts 初始化 ==================== */
 function initSupplyTrend() {
     const chart = echarts.init(supplyTrendRef.value!);
-    const d = top6SupplyTrend;
-    // Top6 矿山配色
-    const colors = ['#52c41a', '#1677ff', '#69b1ff', '#faad14', '#ff7a45', '#b37feb'];
-    // RGB 分量（与 colors 一一对应），用于面积渐变
-    const rgbs = ['82,196,26', '22,119,255', '105,177,255', '250,173,20', '255,122,69', '179,127,235'];
-    const g = (rgb: string) => new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: `rgba(${rgb},0.35)` }, { offset: 1, color: `rgba(${rgb},0.02)` }]);
+    const d = top5SupplyTrend;
+    // TOP5 矿山配色
+    const colors = ['#52c41a', '#1677ff', '#69b1ff', '#faad14', '#ff7a45'];
+    const rgbs = ['82,196,26', '22,119,255', '105,177,255', '250,173,20', '255,122,69'];
+    const g = (rgb: string) => new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: `rgba(${rgb},0.3)` }, { offset: 1, color: `rgba(${rgb},0.02)` }]);
+    const series: any[] = [];
+    d.series.forEach((s, i) => {
+        // 实际供给（实线 + 面积）
+        series.push({
+            name: s.name,
+            type: 'line',
+            smooth: true,
+            symbol: 'circle',
+            symbolSize: 5,
+            areaStyle: { color: g(rgbs[i]) },
+            lineStyle: { color: colors[i], width: 2 },
+            itemStyle: { color: colors[i] },
+            emphasis: { focus: 'series' },
+            data: s.actual,
+        });
+        // 未来预测（同色虚线，无面积）
+        series.push({
+            name: `${s.name}(预测)`,
+            type: 'line',
+            smooth: true,
+            symbol: 'none',
+            lineStyle: { color: colors[i], width: 2, type: 'dashed' },
+            itemStyle: { color: colors[i] },
+            // 与图例联动但不出现在 legend 中（避免翻倍）
+            legendHoverLink: false,
+            data: s.forecast,
+            tooltip: { show: true },
+        });
+    });
     chart.setOption({
         tooltip: {
             trigger: 'axis',
             backgroundColor: 'rgba(10, 22, 40, 0.9)',
             borderColor: 'rgba(22, 119, 255, 0.3)',
             textStyle: { color: '#c9d5e8', fontSize: 11 },
-            // 显示完整年月（如 2026年9月）
             formatter: (params: any) => {
-                const lines = params.map((p: any) => `${p.marker}${p.seriesName}：${Number(p.value).toLocaleString()} 万吨`);
+                const lines = params
+                    .filter((p: any) => p.value !== null && p.value !== undefined && !Number.isNaN(Number(p.value)))
+                    .map((p: any) => `${p.marker}${p.seriesName}：${Number(p.value).toLocaleString()} 万吨`);
                 return `${d.year}年${params[0].axisValue}<br/>` + lines.join('<br/>');
             },
         },
-        legend: { data: d.series.map((s) => s.name), textStyle: { color: '#8c9ab4', fontSize: 10 }, top: 0, right: 0, itemWidth: 14 },
+        legend: {
+            // 仅显示实际线（5 条），预测虚线隐藏避免拥挤
+            data: d.series.map((s) => s.name),
+            textStyle: { color: '#8c9ab4', fontSize: 10 },
+            top: 0,
+            right: 0,
+            itemWidth: 14,
+        },
         grid: { left: 44, right: 10, top: 30, bottom: 24 },
         xAxis: { type: 'category', boundaryGap: false, data: d.months, axisLine: { lineStyle: { color: 'rgba(22, 119, 255, 0.2)' } }, axisLabel: { color: '#8c9ab4', fontSize: 10 } },
         yAxis: { type: 'value', axisLine: { show: false }, axisLabel: { color: '#8c9ab4', fontSize: 10 }, splitLine: { lineStyle: { color: 'rgba(22, 119, 255, 0.08)' } } },
-        series: d.series.map((s, i) => ({
+        series,
+    });
+    charts.supplyTrend = chart; chartList.push(chart);
+    // 默认随机展示一个月份的 tooltip（仅历史实际月份，避免落在预测虚线区）
+    setTimeout(() => {
+        const randomIdx = Math.floor(Math.random() * d.actualCount);
+        chart.dispatchAction({ type: 'showTip', seriesIndex: 0, dataIndex: randomIdx });
+        // 高亮当前轴
+        chart.dispatchAction({ type: 'highlight', seriesIndex: 0, dataIndex: randomIdx });
+    }, 600);
+}
+function initDemandTrend() {
+    const chart = echarts.init(demandTrendRef.value!);
+    const d = top5DemandTrend;
+    const colors = ['#ff7a45', '#ffa940', '#faad14', '#ffd666', '#ff9c6e'];
+    const rgbs = ['255,122,69', '255,169,64', '250,173,20', '255,214,102', '255,156,110'];
+    const g = (rgb: string) => new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: `rgba(${rgb},0.3)` }, { offset: 1, color: `rgba(${rgb},0.02)` }]);
+    const series: any[] = [];
+    d.series.forEach((s, i) => {
+        series.push({
             name: s.name,
             type: 'line',
             smooth: true,
             symbol: 'circle',
-            symbolSize: 6,
+            symbolSize: 5,
             areaStyle: { color: g(rgbs[i]) },
             lineStyle: { color: colors[i], width: 2 },
             itemStyle: { color: colors[i] },
             emphasis: { focus: 'series' },
-            data: s.data,
-        })),
+            data: s.actual,
+        });
+        series.push({
+            name: `${s.name}(预测)`,
+            type: 'line',
+            smooth: true,
+            symbol: 'none',
+            lineStyle: { color: colors[i], width: 2, type: 'dashed' },
+            itemStyle: { color: colors[i] },
+            legendHoverLink: false,
+            data: s.forecast,
+            tooltip: { show: true },
+        });
     });
-    charts.supplyTrend = chart; chartList.push(chart);
-}
-function initDemandTrend() {
-    const chart = echarts.init(demandTrendRef.value!);
-    const d = demandTrend;
     chart.setOption({
-        tooltip: { trigger: 'axis', backgroundColor: 'rgba(10, 22, 40, 0.9)', borderColor: 'rgba(22, 119, 255, 0.3)', textStyle: { color: '#c9d5e8', fontSize: 11 } },
-        legend: { data: ['实际需求', '预测需求'], textStyle: { color: '#8c9ab4', fontSize: 10 }, top: 0, right: 0 },
-        grid: { left: 40, right: 10, top: 30, bottom: 24 },
-        xAxis: { type: 'category', data: d.months, axisLine: { lineStyle: { color: 'rgba(22, 119, 255, 0.2)' } }, axisLabel: { color: '#8c9ab4', fontSize: 9 } },
+        tooltip: {
+            trigger: 'axis',
+            backgroundColor: 'rgba(10, 22, 40, 0.9)',
+            borderColor: 'rgba(22, 119, 255, 0.3)',
+            textStyle: { color: '#c9d5e8', fontSize: 11 },
+            formatter: (params: any) => {
+                const lines = params
+                    .filter((p: any) => p.value !== null && p.value !== undefined && !Number.isNaN(Number(p.value)))
+                    .map((p: any) => `${p.marker}${p.seriesName}：${Number(p.value).toLocaleString()} 万吨`);
+                return `${d.year}年${params[0].axisValue}<br/>` + lines.join('<br/>');
+            },
+        },
+        legend: {
+            data: d.series.map((s) => s.name),
+            textStyle: { color: '#8c9ab4', fontSize: 10 },
+            top: 0,
+            right: 0,
+            itemWidth: 14,
+        },
+        grid: { left: 44, right: 10, top: 30, bottom: 24 },
+        xAxis: { type: 'category', boundaryGap: false, data: d.months, axisLine: { lineStyle: { color: 'rgba(22, 119, 255, 0.2)' } }, axisLabel: { color: '#8c9ab4', fontSize: 10 } },
         yAxis: { type: 'value', axisLine: { show: false }, axisLabel: { color: '#8c9ab4', fontSize: 10 }, splitLine: { lineStyle: { color: 'rgba(22, 119, 255, 0.08)' } } },
-        series: [
-            { name: '实际需求', type: 'line', smooth: true, lineStyle: { color: '#ff7a45', width: 2 }, itemStyle: { color: '#ff7a45' }, areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: 'rgba(255,122,69,0.3)' }, { offset: 1, color: 'rgba(255,122,69,0.02)' }]) }, data: d.actual.concat([null, null, null]) },
-            { name: '预测需求', type: 'line', smooth: true, lineStyle: { color: '#ffa940', width: 2, type: 'dashed' }, itemStyle: { color: '#ffa940' }, data: d.forecast },
-        ],
+        series,
     });
     charts.demandTrend = chart; chartList.push(chart);
+    // 默认随机展示一个月份的 tooltip
+    setTimeout(() => {
+        const randomIdx = Math.floor(Math.random() * d.actualCount);
+        chart.dispatchAction({ type: 'showTip', seriesIndex: 0, dataIndex: randomIdx });
+        chart.dispatchAction({ type: 'highlight', seriesIndex: 0, dataIndex: randomIdx });
+    }, 800);
 }
 
 /* ==================== 简化中国 GeoJSON ==================== */
@@ -406,10 +571,20 @@ function initMainMap(geoJson: any) {
     if (geoJson) echarts.registerMap('china', geoJson);
     const coordMap: Record<string, number[]> = {};
     sichuanMines.forEach((m) => (coordMap[m.name] = m.coord));
-    hubeiCities.forEach((c) => (coordMap[c.name] = c.coord));
-    const supplyPoints = sichuanMines.map((m) => ({ name: m.name, value: [...m.coord, m.output], itemStyle: { color: '#52c41a' } }));
-    const demandPoints = hubeiCities.map((c) => ({ name: c.name, value: [...c.coord, c.demand], itemStyle: { color: '#ff7a45' } }));
-    const lineData = flowLines.map((f) => ({ fromName: f.from, toName: f.to, coords: [coordMap[f.from], coordMap[f.to]], value: f.value }));
+    hubeiCustomers.forEach((c) => (coordMap[c.name] = c.coord));
+    const supplyPoints = sichuanMines.map((m) => ({ name: m.name, value: [...m.coord, m.expected], itemStyle: { color: '#52c41a' } }));
+    const demandPoints = hubeiCustomers.map((c) => ({ name: c.name, value: [...c.coord, c.expected], itemStyle: { color: '#ff7a45' } }));
+    // 矿山年产量索引，tooltip 用
+    const mineActualMap: Record<string, number> = {};
+    sichuanMines.forEach((m) => { mineActualMap[m.name] = m.actual; });
+    const lineData = flowLines.map((f) => ({
+        fromName: f.from,
+        toName: f.to,
+        coords: [coordMap[f.from], coordMap[f.to]],
+        value: f.value,
+        // 该矿山的实际年产量（万吨/年）
+        mineActual: mineActualMap[f.from] ?? 0,
+    }));
     chart.setOption({
         backgroundColor: 'transparent',
         tooltip: {
@@ -418,13 +593,18 @@ function initMainMap(geoJson: any) {
             borderColor: 'rgba(22, 119, 255, 0.3)',
             textStyle: { color: '#c9d5e8', fontSize: 12 },
             formatter: (p: any) => {
-                if (p.seriesType === 'lines') return `${p.data.fromName} → ${p.data.toName}<br/>运输量: ${p.data.value}万吨`;
+                if (p.seriesType === 'lines') {
+                    const { fromName, toName, value, mineActual } = p.data;
+                    // 实际供给量 / 实际年产量 的占比（年产量为 0 时显示 --）
+                    const ratio = mineActual > 0 ? ((value / mineActual) * 100).toFixed(1) + '%' : '--';
+                    return `${fromName} → ${toName}<br/>实际年产量：${mineActual.toLocaleString()} 万吨<br/>实际供给量：${value.toLocaleString()} 万吨<br/>供给量占比：${ratio}`;
+                }
                 if (p.seriesType === 'effectScatter') return `${p.name}<br/>${p.seriesName === '供给矿区' ? '产量' : '需求量'}: ${p.value[2]}万吨`;
                 return p.name;
             },
         },
         geo: {
-            map: 'china', roam: true, zoom: 1.3, center: [108, 32],
+            map: 'china', roam: true, zoom: 2.2, center: [107.5, 32.5],
             label: { show: false },
             itemStyle: { areaColor: 'rgba(22,119,255,0.08)', borderColor: 'rgba(22,119,255,0.3)', borderWidth: 1 },
             emphasis: { itemStyle: { areaColor: 'rgba(22,119,255,0.2)' }, label: { show: true, color: '#fff', fontSize: 10 } },
@@ -483,8 +663,10 @@ let resizeHandler: (() => void) | null = null;
 onMounted(() => {
     tick();
     timeTimer = window.setInterval(tick, 1000);
-    requestAnimationFrame(() => animateCountUp(animatedSupply, 28650));
-    requestAnimationFrame(() => animateCountUp(animatedDemand, 9280));
+    requestAnimationFrame(() => animateCountUp(animatedExpected, 28650));
+    requestAnimationFrame(() => animateCountUp(animatedActual, 25800));
+    requestAnimationFrame(() => animateCountUp(animatedDemandExpected, 9280));
+    requestAnimationFrame(() => animateCountUp(animatedDemandActual, 8350));
     initSupplyTrend(); initDemandTrend();
     loadMapData();
     resizeHandler = () => chartList.forEach((c) => c.resize());
@@ -502,13 +684,13 @@ onBeforeUnmount(() => {
 .cockpit-container { position: fixed; top: 53px; left: 240px; right: 0; bottom: 0; height: auto !important; background: #081628; z-index: 50; padding: 12px 16px; display: flex; flex-direction: column; box-sizing: border-box; overflow-y: auto; }
 
 /* ==================== 顶部 ==================== */
-.header { height: 64px; display: flex; align-items: center; justify-content: space-between; background: linear-gradient(180deg, rgba(22,119,255,0.15) 0%, transparent 100%); border-bottom: 1px solid rgba(22,119,255,0.3); padding: 0 20px; position: relative; margin-bottom: 12px; border-radius: 4px; }
+.header { height: 64px; display: flex; align-items: center; justify-content: center; background: linear-gradient(180deg, rgba(22,119,255,0.15) 0%, transparent 100%); border-bottom: 1px solid rgba(22,119,255,0.3); padding: 0 20px; position: relative; margin-bottom: 12px; border-radius: 4px; }
 .header::before, .header::after { content: ''; position: absolute; bottom: -1px; width: 200px; height: 2px; background: linear-gradient(90deg, transparent, #1677ff, transparent); }
 .header::before { left: 0; }
 .header::after { right: 0; }
 .header-title { font-size: 28px; font-weight: bold; background: linear-gradient(180deg, #fff 0%, #69b1ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 20px rgba(22,119,255,0.5); letter-spacing: 4px; }
 .header-left { display: flex; flex-direction: column; gap: 2px; }
-.header-right { display: flex; align-items: center; gap: 16px; }
+.header-right { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 16px; }
 .datetime-display { font-size: 14px; color: #c9d5e8; font-family: "Courier New", monospace; }
 .fullscreen-btn { width: 32px; height: 32px; border: 1px solid rgba(22,119,255,0.4); border-radius: 4px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; background: rgba(22,119,255,0.1); }
 .fullscreen-btn:hover { background: rgba(22,119,255,0.3); box-shadow: 0 0 10px rgba(22,119,255,0.5); }
@@ -537,21 +719,41 @@ onBeforeUnmount(() => {
 .supply-big-number .big-label { font-size: 11px; color: #8c9ab4; margin-bottom: 4px; }
 .supply-big-number .big-value { font-size: 32px; font-weight: bold; font-family: "DIN Alternate", "Courier New", monospace; background: linear-gradient(180deg, #52c41a 0%, #95de64 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.1; }
 .supply-big-number .big-unit { font-size: 12px; color: #69b1ff; margin-top: 4px; }
+.supply-big-number.actual .big-value { background: linear-gradient(180deg, #69b1ff 0%, #1677ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.supply-divider { width: 1px; height: 60%; background: linear-gradient(180deg, transparent, rgba(22,119,255,0.4), transparent); align-self: center; }
 .demand-big-number .big-value { background: linear-gradient(180deg, #ff7a45 0%, #ffa940 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.demand-big-number.actual .big-value { background: linear-gradient(180deg, #faad14 0%, #ffd666 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.demand-divider { background: linear-gradient(180deg, transparent, rgba(255,122,69,0.4), transparent); }
 
 /* ==================== 矿区列表 ==================== */
-.mine-list { display: flex; flex-direction: column; gap: 8px; }
+.mine-list-body { overflow: hidden; padding: 12px 16px; }
+.mine-list-scroll { display: flex; flex-direction: column; animation: mine-scroll 30s linear infinite; }
+.mine-list-scroll:hover { animation-play-state: paused; }
+.mine-list { display: flex; flex-direction: column; gap: 8px; padding-bottom: 8px; }
+@keyframes mine-scroll {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-50%); }
+}
 .mine-item { display: flex; align-items: center; gap: 10px; padding: 6px 8px; background: rgba(22,119,255,0.05); border-radius: 4px; border-left: 3px solid #52c41a; transition: all 0.3s; }
 .mine-item:hover { background: rgba(82,196,26,0.1); transform: translateX(3px); }
 .mine-item.demand { border-left-color: #ff7a45; }
 .mine-item.demand:hover { background: rgba(255,122,69,0.1); }
 .mine-name { font-size: 12px; color: #e6f0ff; font-weight: 500; flex: 0 0 70px; }
-.mine-type { font-size: 10px; color: #69b1ff; flex: 0 0 80px; }
 .mine-bar-wrap { flex: 1; display: flex; align-items: center; gap: 8px; }
-.mine-bar { flex: 1; height: 6px; background: rgba(22,119,255,0.1); border-radius: 3px; overflow: hidden; }
+.mine-bars { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.mine-bar-row { display: flex; align-items: center; gap: 6px; }
+.mine-bar-tag { font-size: 10px; color: #95de64; flex: 0 0 14px; text-align: center; }
+.mine-bar-tag.actual { color: #69b1ff; }
+.mine-bar { flex: 1; height: 5px; background: rgba(22,119,255,0.1); border-radius: 3px; overflow: hidden; }
 .mine-bar-fill { height: 100%; background: linear-gradient(90deg, #52c41a, #95de64); border-radius: 3px; box-shadow: 0 0 6px rgba(82,196,26,0.5); transition: width 1s ease; }
+.mine-bar-fill.actual { background: linear-gradient(90deg, #1677ff, #69b1ff); box-shadow: 0 0 6px rgba(22,119,255,0.5); }
+.mine-item.demand .mine-bar-tag { color: #ffa940; }
+.mine-item.demand .mine-bar-tag.actual { color: #ffd666; }
 .mine-item.demand .mine-bar-fill { background: linear-gradient(90deg, #ff7a45, #ffa940); box-shadow: 0 0 6px rgba(255,122,69,0.5); }
-.mine-output { font-size: 11px; color: #c9d5e8; font-family: "DIN Alternate", monospace; flex: 0 0 55px; text-align: right; }
+.mine-item.demand .mine-bar-fill.actual-demand { background: linear-gradient(90deg, #faad14, #ffd666); box-shadow: 0 0 6px rgba(250,173,20,0.5); }
+.mine-output.actual-demand-text { color: #ffd666; }
+.mine-output { font-size: 11px; color: #c9d5e8; font-family: "DIN Alternate", monospace; flex: 0 0 60px; text-align: right; }
+.mine-output.actual { color: #69b1ff; }
 
 /* ==================== 地图 ==================== */
 .map-panel { flex: 1; display: flex; flex-direction: column; min-height: 0; }
